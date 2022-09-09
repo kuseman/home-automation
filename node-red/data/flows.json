@@ -1,0 +1,1285 @@
+[
+    {
+        "id": "e9b7f147e511e03f",
+        "type": "tab",
+        "label": "Heating",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "08116aa9d09b7e07",
+        "type": "tab",
+        "label": "Lights",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c70c3bb6711d4880",
+        "type": "tab",
+        "label": "Sensors Fetch",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a9f70622d9abf0a6",
+        "type": "ui_tab",
+        "name": "Heating",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "eae812162ea73f63",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0eb8c0",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Soldat Höks Väg 8",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "YYYY/MM/DD",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "45d82d7418ebf88d",
+        "type": "ui_group",
+        "name": "Graph",
+        "tab": "a9f70622d9abf0a6",
+        "order": 1,
+        "disp": false,
+        "width": 24,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7d155336b6387c79",
+        "type": "ui_tab",
+        "name": "Lights",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": true,
+        "hidden": false
+    },
+    {
+        "id": "1769812833fcb3e0",
+        "type": "ui_group",
+        "name": "Lights",
+        "tab": "7d155336b6387c79",
+        "order": 1,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a64a28aa1822ddc0",
+        "type": "ui_spacer",
+        "z": "08116aa9d09b7e07",
+        "name": "spacer",
+        "group": "1769812833fcb3e0",
+        "order": 3,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "5c9186f58f3118da",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://influxdb:8086",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "122451b9907ba8ea",
+        "type": "ui_group",
+        "name": "Config",
+        "tab": "a9f70622d9abf0a6",
+        "order": 2,
+        "disp": false,
+        "width": 10,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6c6fa2026f9a8196",
+        "type": "ui_spacer",
+        "z": "e9b7f147e511e03f",
+        "name": "spacer",
+        "group": "122451b9907ba8ea",
+        "order": 8,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "110ef92232e90602",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "Debug: Power saver (Lowest price)",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1540,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d01d1e03ed467f4b",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Parse config and transform prices to Power saver",
+        "func": "const config = JSON.parse(msg.payload);\nconst now = new Date();\nconfig.fromTime = now.getHours();\nconfig.toTime = config.fromTime;\n\nconst lastPriceDate = new Date(msg.nordpool_prices.at(-1).timestamp);\n\n// If we don't have any prices further than today\n// then use toTime to the last price hour, ie. schedule\n// as far as we have data\nif (now.getFullYear() == lastPriceDate.getFullYear()\n    && now.getMonth() == lastPriceDate.getMonth()\n    && now.getDay() == lastPriceDate.getDay()) {\n    config.toTime = lastPriceDate.getHours();    \n}\n\nreturn {\n    \"payload\": {\n        \"config\": config,\n        \"priceData\": msg.nordpool_prices\n            .map(p => {\n                return {\n                    \"value\": p.price/1000,\n                    \"start\": p.timestamp\n                };\n            })\n    }\n};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 480,
+        "wires": [
+            [
+                "26323bd56355edc5",
+                "c0778b1a1f49ce81",
+                "aa9256f8d7cb0e77"
+            ]
+        ]
+    },
+    {
+        "id": "c0778b1a1f49ce81",
+        "type": "ps-strategy-lowest-price",
+        "z": "e9b7f147e511e03f",
+        "name": "Lowest Price",
+        "fromTime": "00",
+        "toTime": "00",
+        "hoursOn": "7",
+        "maxPrice": "",
+        "doNotSplit": false,
+        "sendCurrentValueWhenRescheduling": true,
+        "outputIfNoSchedule": "true",
+        "outputOutsidePeriod": "true",
+        "contextStorage": "memory",
+        "x": 1150,
+        "y": 420,
+        "wires": [
+            [
+                "d111e31c3283e559"
+            ],
+            [
+                "d111e31c3283e559"
+            ],
+            [
+                "110ef92232e90602",
+                "ae52d3e291512c23",
+                "059a75d75edd7eee"
+            ]
+        ]
+    },
+    {
+        "id": "26323bd56355edc5",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "Debug: Power saver data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "638fb96d8fc1107e",
+        "type": "ui_chart",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "group": "45d82d7418ebf88d",
+        "order": 1,
+        "width": 24,
+        "height": 13,
+        "label": "Heating schedule",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "dd HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": true,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#e60505",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1850,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "059a75d75edd7eee",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Transform scheule to graph",
+        "func": "/*\nmsg.payload=[{\n    \"series\": [\"temp1\", \"temp2\", \"temp3\" ],\n    \"data\": [ [5,6,9], [3,8,5], [6,7,2] ],\n    \"labels\": [ \"Jan\", \"Feb\", \"Mar\" ]\n}];\n*/\n\nreturn {\n    \"payload\": [{\n        \"series\": [\"Price\", \"Block Heat\"],\n        \"data\": [\n            msg.payload.hours.map(p => {\n                let start = new Date(p.start).getTime();\n                return {\"x\": start, \"y\": p.price };\n            }),\n            msg.payload.hours.map(p => {\n                let start = new Date(p.start).getTime();\n                return {\"x\": start, \"y\": p.onOff ? 0 : 1};\n            })\n        ],        \n        \"labels\": [\"Price\", \"Block Heat\"]\n    }]\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1520,
+        "y": 420,
+        "wires": [
+            [
+                "638fb96d8fc1107e",
+                "4bb272a98a510258"
+            ]
+        ]
+    },
+    {
+        "id": "4bb272a98a510258",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "Debug: Graph data",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1850,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7da01a1de7518058",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "Schedule Heating",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 360,
+        "wires": [
+            [
+                "05c95c319851ae81"
+            ]
+        ]
+    },
+    {
+        "id": "5ac169c9e6f94383",
+        "type": "comment",
+        "z": "e9b7f147e511e03f",
+        "name": "Fetch the next days prices from Nordpool and inssert into Influx",
+        "info": "# Fetch 48 hour prices from Nordpool",
+        "x": 270,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "f7952d245b2df006",
+        "type": "comment",
+        "z": "e9b7f147e511e03f",
+        "name": "Schedule heater and graph",
+        "info": "",
+        "x": 150,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3d11ea8b24951b5d",
+        "type": "file in",
+        "z": "e9b7f147e511e03f",
+        "name": "Read file: Lowest Price Settings",
+        "filename": "/data/lowest-price-settings.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "utf8",
+        "allProps": false,
+        "x": 490,
+        "y": 480,
+        "wires": [
+            [
+                "d01d1e03ed467f4b"
+            ]
+        ]
+    },
+    {
+        "id": "ccf14c2b10fbaa2f",
+        "type": "watch",
+        "z": "e9b7f147e511e03f",
+        "name": "Changes: Lowest Price settings",
+        "files": "/data/lowest-price-settings.json",
+        "recursive": "",
+        "x": 130,
+        "y": 420,
+        "wires": [
+            [
+                "05c95c319851ae81"
+            ]
+        ]
+    },
+    {
+        "id": "ae52d3e291512c23",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "d": true,
+        "name": "Transform Heat Schedule for Slack",
+        "func": "msg.payload = {\n    \"channel\": \"general\",\n    \"text\": `New heat schedule installed:\n    \\`\\`\\`\n` + JSON.stringify(msg.payload.schedule, null, 2) + `\n    \\`\\`\\`\n    Config:\n    \\`\\`\\`\n` + JSON.stringify(msg.payload.config, null, 2) + `\n    \\`\\`\\`\n    `\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1540,
+        "y": 500,
+        "wires": [
+            [
+                "7b6c3d1503349fbc"
+            ]
+        ]
+    },
+    {
+        "id": "7b6c3d1503349fbc",
+        "type": "http request",
+        "z": "e9b7f147e511e03f",
+        "name": "HttpRequest: Send heat schedule to slack",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://slack.com/api/chat.postMessage",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "bearer",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
+        "x": 1920,
+        "y": 500,
+        "wires": [
+            [
+                "3a3de52759b9ce0a"
+            ]
+        ]
+    },
+    {
+        "id": "3a3de52759b9ce0a",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "Debug: Send to slack",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2220,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "17011a73d73f3245",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Parse nordpool prices",
+        "func": "msg.nordpool_prices = msg.payload.map(p => {\n    return {\n        \"timestamp\": p._time,\n        \"price\": p._value\n    }\n});\nmsg.payload = null;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 420,
+        "wires": [
+            [
+                "3d11ea8b24951b5d"
+            ]
+        ]
+    },
+    {
+        "id": "d111e31c3283e559",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "Debug: Turn on night lowering",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1530,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "d43da30de2b364ab",
+        "type": "comment",
+        "z": "e9b7f147e511e03f",
+        "name": "UI",
+        "info": "",
+        "x": 110,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "230c52c997a3d0c4",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "Fetch Prices",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "10 15 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "08baab9101c343d5"
+            ]
+        ]
+    },
+    {
+        "id": "09b9601b66a66ef7",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Transform Nordpool -> InfluxDb",
+        "func": "let tags = {\n    \"currency\": \"SEK\",\n    \"area\": \"SE3\"\n};\n\nlet measurement = \"nordpool-prices\";\n\nlet arr = msg.payload.map(p => {\n    return {\n        \"measurement\": measurement,\n        \"fields\": {\n            \"price\": p.price\n        },\n        \"tags\": tags,\n        \"timestamp\": new Date(p.timestamp).getTime()\n    }\n});\n\nreturn { \n    \"payload\": arr \n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 120,
+        "wires": [
+            [
+                "79b0660acd00282f",
+                "eaab2cde3844be0c"
+            ]
+        ]
+    },
+    {
+        "id": "02987cbd37ba4c3f",
+        "type": "nordpool-api-plus",
+        "z": "e9b7f147e511e03f",
+        "name": "Nordpool fetch prices",
+        "area": "SE3",
+        "currency": "SEK",
+        "x": 540,
+        "y": 120,
+        "wires": [
+            [
+                "09b9601b66a66ef7"
+            ]
+        ]
+    },
+    {
+        "id": "08baab9101c343d5",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Tomorrow",
+        "func": "const today = new Date();\nconst tomorrow = new Date(today);\ntomorrow.setDate(tomorrow.getDate() + 1)\ntomorrow.setUTCHours(0,0,0,0);\nmsg.date = tomorrow;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 120,
+        "wires": [
+            [
+                "02987cbd37ba4c3f"
+            ]
+        ]
+    },
+    {
+        "id": "79b0660acd00282f",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "Debug: Influx insert query",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1150,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "eaab2cde3844be0c",
+        "type": "influxdb batch",
+        "z": "e9b7f147e511e03f",
+        "influxdb": "5c9186f58f3118da",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "Influx: Insert nordpool prices",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "Home Automation",
+        "bucket": "node-red",
+        "x": 1160,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "7def64854a479990",
+        "type": "complete",
+        "z": "e9b7f147e511e03f",
+        "name": "Influx Insert Complete",
+        "scope": [
+            "eaab2cde3844be0c"
+        ],
+        "uncaught": false,
+        "x": 160,
+        "y": 300,
+        "wires": [
+            [
+                "05c95c319851ae81"
+            ]
+        ]
+    },
+    {
+        "id": "05c95c319851ae81",
+        "type": "influxdb in",
+        "z": "e9b7f147e511e03f",
+        "influxdb": "5c9186f58f3118da",
+        "name": "Influx: Get nordpool prices",
+        "query": "from(bucket: \"node-red\")\n  |> range(start: -2h, stop: 2d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"nordpool-prices\")",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "Home Automation",
+        "x": 470,
+        "y": 360,
+        "wires": [
+            [
+                "17011a73d73f3245",
+                "e06e51a02d6b6a68"
+            ]
+        ]
+    },
+    {
+        "id": "e06e51a02d6b6a68",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "Debug: Influx Nordpool query",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "aa9256f8d7cb0e77",
+        "type": "ps-strategy-best-save",
+        "z": "e9b7f147e511e03f",
+        "d": true,
+        "name": "Best Save",
+        "maxHoursToSaveInSequence": 3,
+        "minHoursOnAfterMaxSequenceSaved": "2",
+        "minSaving": "0.3",
+        "sendCurrentValueWhenRescheduling": true,
+        "outputIfNoSchedule": "true",
+        "contextStorage": "memory",
+        "x": 1150,
+        "y": 640,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "bab6ee85b84ac357",
+        "type": "ui_dropdown",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "label": "Strategy",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "122451b9907ba8ea",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Best Save",
+                "value": "bestSave",
+                "type": "str"
+            },
+            {
+                "label": "Lowest Price",
+                "value": "lowestPrice",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "strategy",
+        "topicType": "str",
+        "className": "",
+        "x": 240,
+        "y": 780,
+        "wires": [
+            [
+                "b864935db4b2ab2d"
+            ]
+        ]
+    },
+    {
+        "id": "28dbb60ea78f0927",
+        "type": "ui_switch",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "label": "Lowest Price - Consecutive on-period",
+        "tooltip": "",
+        "group": "122451b9907ba8ea",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "lowestPrice.consecutiveOnPeriod",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 330,
+        "y": 860,
+        "wires": [
+            [
+                "b864935db4b2ab2d"
+            ]
+        ]
+    },
+    {
+        "id": "b06eb2e8e4f9925c",
+        "type": "ui_numeric",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "label": "Best Save - Max per sequence",
+        "tooltip": "",
+        "group": "122451b9907ba8ea",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "wrap": true,
+        "passthru": true,
+        "topic": "bestSave.maxPerSequence",
+        "topicType": "str",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "className": "",
+        "x": 310,
+        "y": 900,
+        "wires": [
+            [
+                "b864935db4b2ab2d"
+            ]
+        ]
+    },
+    {
+        "id": "1ecb4ea7299f3f03",
+        "type": "ui_numeric",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "label": "Best Save - Min recover",
+        "tooltip": "",
+        "group": "122451b9907ba8ea",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "wrap": true,
+        "passthru": true,
+        "topic": "bestSave.minRecover",
+        "topicType": "str",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "className": "",
+        "x": 290,
+        "y": 940,
+        "wires": [
+            [
+                "b864935db4b2ab2d"
+            ]
+        ]
+    },
+    {
+        "id": "67d75cb2a6a0023a",
+        "type": "ui_button",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "group": "122451b9907ba8ea",
+        "order": 6,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Apply",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 230,
+        "y": 980,
+        "wires": [
+            [
+                "f663ae8c5503294e"
+            ]
+        ]
+    },
+    {
+        "id": "aa5149313515866f",
+        "type": "ui_numeric",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "label": "Lowest Price - Hours on",
+        "tooltip": "",
+        "group": "122451b9907ba8ea",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "wrap": true,
+        "passthru": false,
+        "topic": "lowestPrice.hoursOn",
+        "topicType": "str",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "24",
+        "step": 1,
+        "className": "",
+        "x": 290,
+        "y": 820,
+        "wires": [
+            [
+                "b864935db4b2ab2d"
+            ]
+        ]
+    },
+    {
+        "id": "b864935db4b2ab2d",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI to context",
+        "func": "let config = flow.get(\"heatConfig\", \"memory\");\nif (config === null || config === undefined) {\n    config = {};\n    flow.set(\"heatConfig\", config, \"memory\");\n}\nconfig[msg.topic] = msg.payload;\n\n//node.warn(config);\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b194f84b18325d6f",
+        "type": "ui_button",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "group": "122451b9907ba8ea",
+        "order": 7,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Reset",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 230,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f663ae8c5503294e",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Store UI from context",
+        "func": "let config = flow.get(\"heatConfig\", \"memory\");\n// Store the memory config to file context upon apply\nflow.set(\"heatConfig\", config, \"file\");\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2eedc4d14974810f",
+        "type": "comment",
+        "z": "e9b7f147e511e03f",
+        "name": "Try settings and show graph",
+        "info": "",
+        "x": 920,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "99ef81142ef233f5",
+        "type": "shelly-gen1",
+        "z": "08116aa9d09b7e07",
+        "hostname": "192.168.0.68",
+        "description": "Office: Window Lights",
+        "mode": "polling",
+        "server": "",
+        "outputmode": "event",
+        "uploadretryinterval": 5000,
+        "pollinginterval": 5000,
+        "pollstatus": false,
+        "getstatusoncommand": true,
+        "devicetype": "Relay",
+        "outputs": 1,
+        "rgbwmode": "color",
+        "x": 700,
+        "y": 60,
+        "wires": [
+            [
+                "ba4a81681619c71b",
+                "7af7844dfef9233a"
+            ]
+        ]
+    },
+    {
+        "id": "7af7844dfef9233a",
+        "type": "ui_switch",
+        "z": "08116aa9d09b7e07",
+        "name": "",
+        "label": "Office: WIndow Lights",
+        "tooltip": "",
+        "group": "1769812833fcb3e0",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "{\"on\":true}",
+        "onvalueType": "json",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "{\"on\":false}",
+        "offvalueType": "json",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 260,
+        "y": 60,
+        "wires": [
+            [
+                "99ef81142ef233f5"
+            ]
+        ]
+    },
+    {
+        "id": "1e521c2b8721e214",
+        "type": "ui_button",
+        "z": "08116aa9d09b7e07",
+        "name": "",
+        "group": "1769812833fcb3e0",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "All: Off",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"on\":false}",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 110,
+        "y": 200,
+        "wires": [
+            [
+                "99ef81142ef233f5",
+                "817b4685aebe0931"
+            ]
+        ]
+    },
+    {
+        "id": "817b4685aebe0931",
+        "type": "shelly-gen1",
+        "z": "08116aa9d09b7e07",
+        "hostname": "192.168.0.164",
+        "description": "Livingroom Down stairs: Window Lights",
+        "mode": "polling",
+        "server": "",
+        "outputmode": "event",
+        "uploadretryinterval": 5000,
+        "pollinginterval": 5000,
+        "pollstatus": false,
+        "getstatusoncommand": true,
+        "devicetype": "Relay",
+        "outputs": 1,
+        "rgbwmode": "color",
+        "x": 760,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dea874ab3c9ea887",
+        "type": "ui_switch",
+        "z": "08116aa9d09b7e07",
+        "name": "",
+        "label": "Livingroom Downstairs: WIndow Lights",
+        "tooltip": "",
+        "group": "1769812833fcb3e0",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "{\"on\":true}",
+        "onvalueType": "json",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "{\"on\":false}",
+        "offvalueType": "json",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 210,
+        "y": 120,
+        "wires": [
+            [
+                "817b4685aebe0931"
+            ]
+        ]
+    },
+    {
+        "id": "ba4a81681619c71b",
+        "type": "debug",
+        "z": "08116aa9d09b7e07",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "981a61bf453d44f4",
+        "type": "inject",
+        "z": "c70c3bb6711d4880",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 200,
+        "wires": [
+            [
+                "f45401be39697f3e"
+            ]
+        ]
+    },
+    {
+        "id": "f45401be39697f3e",
+        "type": "http request",
+        "z": "c70c3bb6711d4880",
+        "name": "GET Shelly Uni (Heat room)",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.0.142/status",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 460,
+        "y": 200,
+        "wires": [
+            [
+                "04e9cedfaa1348f5"
+            ]
+        ]
+    },
+    {
+        "id": "04e9cedfaa1348f5",
+        "type": "function",
+        "z": "c70c3bb6711d4880",
+        "name": "Transform sensor data -> InfluxDb",
+        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\n\n\nfor (const [key, value] of Object.entries(msg.payload.ext_temperature)) {\n    arr.push({\n        \"measurement\": measurement,\n        \"fields\": {\n            \"temperature\": value.tC\n        },\n        \"tags\": {\n            \"sensorId\": value.hwID\n        },\n        \"timestamp\": time\n    });\n}\n\nreturn {\n    \"payload\": arr\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 200,
+        "wires": [
+            [
+                "15bb577a6f16a356",
+                "fd4081947c4cd7c8"
+            ]
+        ]
+    },
+    {
+        "id": "15bb577a6f16a356",
+        "type": "debug",
+        "z": "c70c3bb6711d4880",
+        "name": "Debug: Sensors Influx insert",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "fd4081947c4cd7c8",
+        "type": "influxdb batch",
+        "z": "c70c3bb6711d4880",
+        "influxdb": "5c9186f58f3118da",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "Influx: Insert sensor data",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "Home Automation",
+        "bucket": "node-red",
+        "x": 1070,
+        "y": 200,
+        "wires": []
+    }
+]

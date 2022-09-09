@@ -1,0 +1,16 @@
+{
+    "name": "node-red-project",
+    "description": "A Node-RED Project",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "node-red-contrib-influxdb": "~0.6.1",
+        "node-red-contrib-nordpool-api-plus": "~4.3.1",
+        "node-red-contrib-power-saver": "~3.6.2",
+        "node-red-contrib-scheduler": "~1.0.5",
+        "node-red-contrib-shelly": "~9.13.0",
+        "node-red-contrib-slack": "~2.0.0",
+        "node-red-contrib-tibber-api": "~2.7.1",
+        "node-red-dashboard": "~3.1.7"
+    }
+}

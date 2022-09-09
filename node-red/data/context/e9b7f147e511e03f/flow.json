@@ -1,0 +1,6 @@
+{
+    "heatConfig": {
+        "bestSave.maxPerSequence": 3,
+        "lowestPrice.consecutiveOnPeriod": false
+    }
+}
