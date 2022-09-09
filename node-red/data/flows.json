@@ -228,7 +228,7 @@
         "type": "function",
         "z": "e9b7f147e511e03f",
         "name": "Parse config and transform prices to Power saver",
-        "func": "const config = JSON.parse(msg.payload);\nconst now = new Date();\nconfig.fromTime = now.getHours();\nconfig.toTime = config.fromTime;\n\nconst lastPriceDate = new Date(msg.nordpool_prices.at(-1).timestamp);\n\n// If we don't have any prices further than today\n// then use toTime to the last price hour, ie. schedule\n// as far as we have data\nif (now.getFullYear() == lastPriceDate.getFullYear()\n    && now.getMonth() == lastPriceDate.getMonth()\n    && now.getDay() == lastPriceDate.getDay()) {\n    config.toTime = lastPriceDate.getHours();    \n}\n\nreturn {\n    \"payload\": {\n        \"config\": config,\n        \"priceData\": msg.nordpool_prices\n            .map(p => {\n                return {\n                    \"value\": p.price/1000,\n                    \"start\": p.timestamp\n                };\n            })\n    }\n};\n",
+        "func": "const config = JSON.parse(msg.payload);\nconst now = new Date();\nconfig.fromTime = now.getHours();\nconfig.toTime = config.fromTime;\n\nconst lastPriceDate = new Date(msg.nordpool_prices.at(-1).timestamp);\n\n// If we don't have any prices further than today\n// then use toTime to the last price hour, ie. schedule\n// as far as we have data\nif (now.getFullYear() == lastPriceDate.getFullYear()\n    && now.getMonth() == lastPriceDate.getMonth()\n    && now.getDay() == lastPriceDate.getDay()) {\n    config.toTime = lastPriceDate.getHours();\n\n    // Adjust the hoursOn if longer than configured\n    let priceTime = config.fromTime - config.toTime;\n    if (config.hoursOn > priceTime) {\n        config.hoursOn = priceTime;\n    }\n}\n\nreturn {\n    \"payload\": {\n        \"config\": config,\n        \"priceData\": msg.nordpool_prices\n            .map(p => {\n                return {\n                    \"value\": p.price/1000,\n                    \"start\": p.timestamp\n                };\n            })\n    }\n};\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -791,7 +791,7 @@
         "topic": "strategy",
         "topicType": "str",
         "className": "",
-        "x": 240,
+        "x": 540,
         "y": 780,
         "wires": [
             [
@@ -825,7 +825,7 @@
         "offcolor": "",
         "animate": false,
         "className": "",
-        "x": 330,
+        "x": 630,
         "y": 860,
         "wires": [
             [
@@ -853,7 +853,7 @@
         "max": 10,
         "step": 1,
         "className": "",
-        "x": 310,
+        "x": 610,
         "y": 900,
         "wires": [
             [
@@ -881,7 +881,7 @@
         "max": 10,
         "step": 1,
         "className": "",
-        "x": 290,
+        "x": 590,
         "y": 940,
         "wires": [
             [
@@ -909,7 +909,7 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 230,
+        "x": 530,
         "y": 980,
         "wires": [
             [
@@ -937,7 +937,7 @@
         "max": "24",
         "step": 1,
         "className": "",
-        "x": 290,
+        "x": 590,
         "y": 820,
         "wires": [
             [
@@ -956,7 +956,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 650,
+        "x": 950,
         "y": 860,
         "wires": [
             []
@@ -982,7 +982,7 @@
         "payloadType": "str",
         "topic": "topic",
         "topicType": "msg",
-        "x": 230,
+        "x": 530,
         "y": 1020,
         "wires": [
             []
@@ -993,13 +993,13 @@
         "type": "function",
         "z": "e9b7f147e511e03f",
         "name": "Store UI from context",
-        "func": "let config = flow.get(\"heatConfig\", \"memory\");\n// Store the memory config to file context upon apply\nflow.set(\"heatConfig\", config, \"file\");\nreturn null;",
+        "func": "let config = flow.get(\"heatConfig\", \"memory\");\nlet configCopy = JSON.parse(JSON.stringify(config));\n// Store the memory config to file context upon apply\nflow.set(\"heatConfig\", configCopy, \"file\");\nreturn null;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 660,
+        "x": 960,
         "y": 980,
         "wires": [
             []
@@ -1011,9 +1011,38 @@
         "z": "e9b7f147e511e03f",
         "name": "Try settings and show graph",
         "info": "",
-        "x": 920,
+        "x": 1240,
         "y": 860,
         "wires": []
+    },
+    {
+        "id": "c407b268e4cae7c6",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "#:(file)::heatConfig.strategy",
+        "payloadType": "flow",
+        "x": 270,
+        "y": 780,
+        "wires": [
+            [
+                "bab6ee85b84ac357"
+            ]
+        ]
     },
     {
         "id": "99ef81142ef233f5",
@@ -1179,7 +1208,7 @@
         "id": "981a61bf453d44f4",
         "type": "inject",
         "z": "c70c3bb6711d4880",
-        "name": "",
+        "name": "Every minute",
         "props": [
             {
                 "p": "payload"
@@ -1196,7 +1225,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 230,
+        "x": 240,
         "y": 200,
         "wires": [
             [
@@ -1220,7 +1249,7 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 460,
+        "x": 480,
         "y": 200,
         "wires": [
             [
@@ -1233,7 +1262,7 @@
         "type": "function",
         "z": "c70c3bb6711d4880",
         "name": "Transform sensor data -> InfluxDb",
-        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\n\n\nfor (const [key, value] of Object.entries(msg.payload.ext_temperature)) {\n    arr.push({\n        \"measurement\": measurement,\n        \"fields\": {\n            \"temperature\": value.tC\n        },\n        \"tags\": {\n            \"sensorId\": value.hwID\n        },\n        \"timestamp\": time\n    });\n}\n\nreturn {\n    \"payload\": arr\n};",
+        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\n// Temperature\nfor (const [key, value] of Object.entries(msg.payload.ext_temperature)) {\n    arr.push({\n        \"measurement\": measurement,\n        \"fields\": {\n            \"temperature\": value.tC\n        },\n        \"tags\": {\n            \"sensorId\": value.hwID\n        },\n        \"timestamp\": time\n    });\n}\n\n// Relay statuses\narr.push({\n    \"measurement\": \"relays\",\n    \"fields\": {\n        \"ison\": msg.payload.relays[0].ison\n    },\n    \"tags\": {\n        \"relayId\": \"heatRoomUni_0\"\n    },\n    \"timestamp\": time\n});\narr.push({\n    \"measurement\": \"relays\",\n    \"fields\": {\n        \"ison\": msg.payload.relays[1].ison\n    },\n    \"tags\": {\n        \"relayId\": \"heatRoomUni_1\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
