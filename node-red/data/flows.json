@@ -24,6 +24,71 @@
         "env": []
     },
     {
+        "id": "c3f1d6073dd1b579",
+        "type": "subflow",
+        "name": "Price Strategy",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "0f1a9c082b27ebd9"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1340,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "98c7d7f3fb98aea3",
+                        "port": 0
+                    },
+                    {
+                        "id": "c9d3d08f8d5535f8",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 1340,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "98c7d7f3fb98aea3",
+                        "port": 1
+                    },
+                    {
+                        "id": "c9d3d08f8d5535f8",
+                        "port": 1
+                    }
+                ]
+            },
+            {
+                "x": 1340,
+                "y": 200,
+                "wires": [
+                    {
+                        "id": "98c7d7f3fb98aea3",
+                        "port": 2
+                    },
+                    {
+                        "id": "c9d3d08f8d5535f8",
+                        "port": 2
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
         "id": "a9f70622d9abf0a6",
         "type": "ui_tab",
         "name": "Heating",
@@ -137,7 +202,7 @@
         "tab": "a9f70622d9abf0a6",
         "order": 1,
         "disp": false,
-        "width": 24,
+        "width": 9,
         "collapse": false,
         "className": ""
     },
@@ -192,25 +257,175 @@
         "tab": "a9f70622d9abf0a6",
         "order": 2,
         "disp": false,
-        "width": 10,
+        "width": 9,
         "collapse": false,
         "className": ""
     },
     {
-        "id": "6c6fa2026f9a8196",
+        "id": "4cd68d946bbd8690",
         "type": "ui_spacer",
         "z": "e9b7f147e511e03f",
         "name": "spacer",
         "group": "122451b9907ba8ea",
         "order": 8,
-        "width": 6,
+        "width": 5,
         "height": 1
     },
     {
-        "id": "110ef92232e90602",
+        "id": "b1941c4705040f69",
+        "type": "switch",
+        "z": "c3f1d6073dd1b579",
+        "name": "",
+        "property": "strategy",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "lowestPrice",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "bestSave",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 930,
+        "y": 140,
+        "wires": [
+            [
+                "98c7d7f3fb98aea3"
+            ],
+            [
+                "c9d3d08f8d5535f8"
+            ]
+        ]
+    },
+    {
+        "id": "98c7d7f3fb98aea3",
+        "type": "ps-strategy-lowest-price",
+        "z": "c3f1d6073dd1b579",
+        "name": "Lowest Price",
+        "fromTime": "00",
+        "toTime": "00",
+        "hoursOn": "12",
+        "maxPrice": "",
+        "doNotSplit": true,
+        "sendCurrentValueWhenRescheduling": true,
+        "outputIfNoSchedule": "true",
+        "outputOutsidePeriod": "true",
+        "contextStorage": "memory",
+        "x": 1090,
+        "y": 100,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "c9d3d08f8d5535f8",
+        "type": "ps-strategy-best-save",
+        "z": "c3f1d6073dd1b579",
+        "name": "Best Save",
+        "maxHoursToSaveInSequence": 3,
+        "minHoursOnAfterMaxSequenceSaved": 2,
+        "minSaving": 0.01,
+        "sendCurrentValueWhenRescheduling": true,
+        "outputIfNoSchedule": "true",
+        "contextStorage": "memory",
+        "x": 1090,
+        "y": 180,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "0f1a9c082b27ebd9",
+        "type": "influxdb in",
+        "z": "c3f1d6073dd1b579",
+        "influxdb": "5c9186f58f3118da",
+        "name": "Influx: Get nordpool prices",
+        "query": "from(bucket: \"node-red\")\n  |> range(start: -2h, stop: 2d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"nordpool-prices\")",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "Home Automation",
+        "x": 230,
+        "y": 140,
+        "wires": [
+            [
+                "8578d0e9b24fc679",
+                "f32fe87b72d31e1d"
+            ]
+        ]
+    },
+    {
+        "id": "8578d0e9b24fc679",
+        "type": "function",
+        "z": "c3f1d6073dd1b579",
+        "name": "Parse nordpool prices",
+        "func": "msg.nordpool_prices = msg.payload.map(p => {\n    return {\n        \"timestamp\": p._time,\n        \"price\": p._value\n    }\n});\nmsg.payload = null;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 140,
+        "wires": [
+            [
+                "cd7a0a25b2bd14ef"
+            ]
+        ]
+    },
+    {
+        "id": "cd7a0a25b2bd14ef",
+        "type": "function",
+        "z": "c3f1d6073dd1b579",
+        "name": "Parse config and transform prices to Power saver",
+        "func": "const heatConfig = msg.heatConfig;\nconst now = new Date();\n\nlet strategy = heatConfig.strategy;\nlet config;\nif (strategy === \"lowestPrice\") {\n    config = JSON.parse(JSON.stringify(heatConfig.lowestPrice));\n\n    config.fromTime = now.getHours();\n    config.toTime = config.fromTime;\n\n    const lastPriceDate = new Date(msg.nordpool_prices.at(-1).timestamp);\n\n    // If we don't have any prices further than today\n    // then use toTime to the last price hour, ie. schedule\n    // as far as we have data\n    if (now.getFullYear() == lastPriceDate.getFullYear()\n        && now.getMonth() == lastPriceDate.getMonth()\n        && now.getDay() == lastPriceDate.getDay()) {\n        config.toTime = lastPriceDate.getHours();\n\n        // Adjust the hoursOn if longer than configured\n        let priceTime = config.fromTime - config.toTime;\n        if (config.hoursOn > priceTime) {\n            config.hoursOn = priceTime;\n        }\n    }\n} else {\n    config = JSON.parse(JSON.stringify(heatConfig.bestSave));\n}\n\nreturn {\n    \"strategy\": strategy,\n    \"payload\": {\n        \"commands\": {\n            \"reset\": true,\n        },\n        \"config\": config,\n        \"priceData\": msg.nordpool_prices\n            .map(p => {\n                return {\n                    \"value\": p.price/1000,\n                    \"start\": p.timestamp\n                };\n            })\n    }\n};\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 240,
+        "wires": [
+            [
+                "b1941c4705040f69",
+                "6d1f3bdc62bf6691"
+            ]
+        ]
+    },
+    {
+        "id": "f32fe87b72d31e1d",
         "type": "debug",
-        "z": "e9b7f147e511e03f",
-        "name": "Debug: Power saver (Lowest price)",
+        "z": "c3f1d6073dd1b579",
+        "name": "Debug: Influx Nordpool query",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "6d1f3bdc62bf6691",
+        "type": "debug",
+        "z": "c3f1d6073dd1b579",
+        "name": "Debug: Power saver data",
         "active": false,
         "tosidebar": true,
         "console": false,
@@ -219,67 +434,16 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1540,
-        "y": 460,
+        "x": 1130,
+        "y": 240,
         "wires": []
     },
     {
-        "id": "d01d1e03ed467f4b",
-        "type": "function",
-        "z": "e9b7f147e511e03f",
-        "name": "Parse config and transform prices to Power saver",
-        "func": "const config = JSON.parse(msg.payload);\nconst now = new Date();\nconfig.fromTime = now.getHours();\nconfig.toTime = config.fromTime;\n\nconst lastPriceDate = new Date(msg.nordpool_prices.at(-1).timestamp);\n\n// If we don't have any prices further than today\n// then use toTime to the last price hour, ie. schedule\n// as far as we have data\nif (now.getFullYear() == lastPriceDate.getFullYear()\n    && now.getMonth() == lastPriceDate.getMonth()\n    && now.getDay() == lastPriceDate.getDay()) {\n    config.toTime = lastPriceDate.getHours();\n\n    // Adjust the hoursOn if longer than configured\n    let priceTime = config.fromTime - config.toTime;\n    if (config.hoursOn > priceTime) {\n        config.hoursOn = priceTime;\n    }\n}\n\nreturn {\n    \"payload\": {\n        \"config\": config,\n        \"priceData\": msg.nordpool_prices\n            .map(p => {\n                return {\n                    \"value\": p.price/1000,\n                    \"start\": p.timestamp\n                };\n            })\n    }\n};\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 850,
-        "y": 480,
-        "wires": [
-            [
-                "26323bd56355edc5",
-                "c0778b1a1f49ce81",
-                "aa9256f8d7cb0e77"
-            ]
-        ]
-    },
-    {
-        "id": "c0778b1a1f49ce81",
-        "type": "ps-strategy-lowest-price",
-        "z": "e9b7f147e511e03f",
-        "name": "Lowest Price",
-        "fromTime": "00",
-        "toTime": "00",
-        "hoursOn": "7",
-        "maxPrice": "",
-        "doNotSplit": false,
-        "sendCurrentValueWhenRescheduling": true,
-        "outputIfNoSchedule": "true",
-        "outputOutsidePeriod": "true",
-        "contextStorage": "memory",
-        "x": 1150,
-        "y": 420,
-        "wires": [
-            [
-                "d111e31c3283e559"
-            ],
-            [
-                "d111e31c3283e559"
-            ],
-            [
-                "110ef92232e90602",
-                "ae52d3e291512c23",
-                "059a75d75edd7eee"
-            ]
-        ]
-    },
-    {
-        "id": "26323bd56355edc5",
+        "id": "110ef92232e90602",
         "type": "debug",
         "z": "e9b7f147e511e03f",
         "name": "Debug: Power saver data",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -287,8 +451,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1190,
-        "y": 480,
+        "x": 1510,
+        "y": 460,
         "wires": []
     },
     {
@@ -298,15 +462,15 @@
         "name": "",
         "group": "45d82d7418ebf88d",
         "order": 1,
-        "width": 24,
-        "height": 13,
+        "width": 0,
+        "height": 0,
         "label": "Heating schedule",
         "chartType": "line",
         "legend": "true",
         "xformat": "dd HH:mm",
         "interpolate": "linear",
         "nodata": "",
-        "dot": true,
+        "dot": false,
         "ymin": "",
         "ymax": "",
         "removeOlder": 1,
@@ -389,7 +553,7 @@
         "repeat": "",
         "crontab": "",
         "once": true,
-        "onceDelay": "0.1",
+        "onceDelay": "1",
         "topic": "",
         "payload": "",
         "payloadType": "date",
@@ -397,7 +561,7 @@
         "y": 360,
         "wires": [
             [
-                "05c95c319851ae81"
+                "edb2299daf504d27"
             ]
         ]
     },
@@ -422,26 +586,6 @@
         "wires": []
     },
     {
-        "id": "3d11ea8b24951b5d",
-        "type": "file in",
-        "z": "e9b7f147e511e03f",
-        "name": "Read file: Lowest Price Settings",
-        "filename": "/data/lowest-price-settings.json",
-        "filenameType": "str",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "utf8",
-        "allProps": false,
-        "x": 490,
-        "y": 480,
-        "wires": [
-            [
-                "d01d1e03ed467f4b"
-            ]
-        ]
-    },
-    {
         "id": "ccf14c2b10fbaa2f",
         "type": "watch",
         "z": "e9b7f147e511e03f",
@@ -452,7 +596,7 @@
         "y": 420,
         "wires": [
             [
-                "05c95c319851ae81"
+                "edb2299daf504d27"
             ]
         ]
     },
@@ -525,25 +669,6 @@
         "wires": []
     },
     {
-        "id": "17011a73d73f3245",
-        "type": "function",
-        "z": "e9b7f147e511e03f",
-        "name": "Parse nordpool prices",
-        "func": "msg.nordpool_prices = msg.payload.map(p => {\n    return {\n        \"timestamp\": p._time,\n        \"price\": p._value\n    }\n});\nmsg.payload = null;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 460,
-        "y": 420,
-        "wires": [
-            [
-                "3d11ea8b24951b5d"
-            ]
-        ]
-    },
-    {
         "id": "d111e31c3283e559",
         "type": "debug",
         "z": "e9b7f147e511e03f",
@@ -557,7 +682,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1530,
-        "y": 320,
+        "y": 340,
         "wires": []
     },
     {
@@ -700,46 +825,9 @@
         "y": 300,
         "wires": [
             [
-                "05c95c319851ae81"
+                "edb2299daf504d27"
             ]
         ]
-    },
-    {
-        "id": "05c95c319851ae81",
-        "type": "influxdb in",
-        "z": "e9b7f147e511e03f",
-        "influxdb": "5c9186f58f3118da",
-        "name": "Influx: Get nordpool prices",
-        "query": "from(bucket: \"node-red\")\n  |> range(start: -2h, stop: 2d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"nordpool-prices\")",
-        "rawOutput": false,
-        "precision": "",
-        "retentionPolicy": "",
-        "org": "Home Automation",
-        "x": 470,
-        "y": 360,
-        "wires": [
-            [
-                "17011a73d73f3245",
-                "e06e51a02d6b6a68"
-            ]
-        ]
-    },
-    {
-        "id": "e06e51a02d6b6a68",
-        "type": "debug",
-        "z": "e9b7f147e511e03f",
-        "name": "Debug: Influx Nordpool query",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 780,
-        "y": 360,
-        "wires": []
     },
     {
         "id": "aa9256f8d7cb0e77",
@@ -812,7 +900,7 @@
         "height": 0,
         "passthru": true,
         "decouple": "false",
-        "topic": "lowestPrice.consecutiveOnPeriod",
+        "topic": "lowestPrice.doNotSplit",
         "topicType": "str",
         "style": "",
         "onvalue": "true",
@@ -846,7 +934,7 @@
         "height": 0,
         "wrap": true,
         "passthru": true,
-        "topic": "bestSave.maxPerSequence",
+        "topic": "bestSave.maxHoursToSaveInSequence",
         "topicType": "str",
         "format": "{{value}}",
         "min": 0,
@@ -874,7 +962,7 @@
         "height": 0,
         "wrap": true,
         "passthru": true,
-        "topic": "bestSave.minRecover",
+        "topic": "bestSave.minHoursOnAfterMaxSequenceSaved",
         "topicType": "str",
         "format": "{{value}}",
         "min": 0,
@@ -950,7 +1038,7 @@
         "type": "function",
         "z": "e9b7f147e511e03f",
         "name": "Set UI to context",
-        "func": "let config = flow.get(\"heatConfig\", \"memory\");\nif (config === null || config === undefined) {\n    config = {};\n    flow.set(\"heatConfig\", config, \"memory\");\n}\nconfig[msg.topic] = msg.payload;\n\n//node.warn(config);\n\nreturn null;",
+        "func": "let config = flow.get(\"heatConfig\", \"memory\");\nif (config === null || config === undefined) {\n    config = {};\n    flow.set(\"heatConfig\", config, \"memory\");\n}\n\n// Split path into component parts\nconst parts = msg.topic.split('.');\n\n// Create sub-objects along path as needed\nlet target = config;\nwhile (parts.length > 1) {\n    const part = parts.shift();\n    target = target[part] = target[part] || {};\n}\n\n// Set value at end of path\ntarget[parts[0]] = msg.payload;\n\n//config[msg.topic] = msg.payload;\n\n//node.warn(config);\n\nreturn {\n    \"heatConfig\": config\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -959,7 +1047,9 @@
         "x": 950,
         "y": 860,
         "wires": [
-            []
+            [
+                "12e28e4092178c2d"
+            ]
         ]
     },
     {
@@ -985,7 +1075,9 @@
         "x": 530,
         "y": 1020,
         "wires": [
-            []
+            [
+                "b9ab93f6c634c234"
+            ]
         ]
     },
     {
@@ -1004,16 +1096,6 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "2eedc4d14974810f",
-        "type": "comment",
-        "z": "e9b7f147e511e03f",
-        "name": "Try settings and show graph",
-        "info": "",
-        "x": 1240,
-        "y": 860,
-        "wires": []
     },
     {
         "id": "c407b268e4cae7c6",
@@ -1036,11 +1118,218 @@
         "topic": "",
         "payload": "#:(file)::heatConfig.strategy",
         "payloadType": "flow",
-        "x": 270,
+        "x": 310,
         "y": 780,
         "wires": [
             [
                 "bab6ee85b84ac357"
+            ]
+        ]
+    },
+    {
+        "id": "517aec352a409756",
+        "type": "complete",
+        "z": "e9b7f147e511e03f",
+        "name": "Config changed",
+        "scope": [
+            "f663ae8c5503294e",
+            "b9ab93f6c634c234"
+        ],
+        "uncaught": false,
+        "x": 180,
+        "y": 480,
+        "wires": [
+            [
+                "edb2299daf504d27"
+            ]
+        ]
+    },
+    {
+        "id": "b9ab93f6c634c234",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Reset config from file",
+        "func": "let config = flow.get(\"heatConfig\", \"file\");\nlet configCopy = JSON.parse(JSON.stringify(config));\n// Set the memory config to the coped file\nflow.set(\"heatConfig\", configCopy, \"memory\");\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "29f40f86d707399b",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "#:(file)::heatConfig.lowestPrice.hoursOn",
+        "payloadType": "flow",
+        "x": 270,
+        "y": 820,
+        "wires": [
+            [
+                "aa5149313515866f"
+            ]
+        ]
+    },
+    {
+        "id": "08d90a9615ca8517",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "#:(file)::heatConfig.lowestPrice.doNotSplit",
+        "payloadType": "flow",
+        "x": 270,
+        "y": 860,
+        "wires": [
+            [
+                "28dbb60ea78f0927"
+            ]
+        ]
+    },
+    {
+        "id": "aec7a10dce6a9a16",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "#:(file)::heatConfig.bestSave.maxPerSequence",
+        "payloadType": "flow",
+        "x": 250,
+        "y": 900,
+        "wires": [
+            [
+                "b06eb2e8e4f9925c"
+            ]
+        ]
+    },
+    {
+        "id": "3783e5b0a8d420e8",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "#:(file)::heatConfig.bestSave.minRecover",
+        "payloadType": "flow",
+        "x": 270,
+        "y": 940,
+        "wires": [
+            [
+                "1ecb4ea7299f3f03"
+            ]
+        ]
+    },
+    {
+        "id": "12e28e4092178c2d",
+        "type": "subflow:c3f1d6073dd1b579",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "x": 1190,
+        "y": 860,
+        "wires": [
+            [],
+            [],
+            [
+                "059a75d75edd7eee",
+                "110ef92232e90602"
+            ]
+        ]
+    },
+    {
+        "id": "78d6816345b59d77",
+        "type": "subflow:c3f1d6073dd1b579",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "x": 750,
+        "y": 380,
+        "wires": [
+            [
+                "d111e31c3283e559"
+            ],
+            [
+                "d111e31c3283e559"
+            ],
+            [
+                "059a75d75edd7eee",
+                "110ef92232e90602",
+                "ae52d3e291512c23"
+            ]
+        ]
+    },
+    {
+        "id": "edb2299daf504d27",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set Heat Config From file",
+        "func": "let config = flow.get(\"heatConfig\", \"file\");\nreturn {\n    \"heatConfig\": config\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 380,
+        "wires": [
+            [
+                "78d6816345b59d77"
             ]
         ]
     },
@@ -1229,7 +1518,8 @@
         "y": 200,
         "wires": [
             [
-                "f45401be39697f3e"
+                "f45401be39697f3e",
+                "29af7b5bf540017d"
             ]
         ]
     },
@@ -1262,7 +1552,7 @@
         "type": "function",
         "z": "c70c3bb6711d4880",
         "name": "Transform sensor data -> InfluxDb",
-        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\n// Temperature\nfor (const [key, value] of Object.entries(msg.payload.ext_temperature)) {\n    arr.push({\n        \"measurement\": measurement,\n        \"fields\": {\n            \"temperature\": value.tC\n        },\n        \"tags\": {\n            \"sensorId\": value.hwID\n        },\n        \"timestamp\": time\n    });\n}\n\n// Relay statuses\narr.push({\n    \"measurement\": \"relays\",\n    \"fields\": {\n        \"ison\": msg.payload.relays[0].ison\n    },\n    \"tags\": {\n        \"relayId\": \"heatRoomUni_0\"\n    },\n    \"timestamp\": time\n});\narr.push({\n    \"measurement\": \"relays\",\n    \"fields\": {\n        \"ison\": msg.payload.relays[1].ison\n    },\n    \"tags\": {\n        \"relayId\": \"heatRoomUni_1\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
+        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\n// Temperature\nfor (const [key, value] of Object.entries(msg.payload.ext_temperature)) {\n    arr.push({\n        \"measurement\": measurement,\n        \"fields\": {\n            \"temperature\": value.tC\n        },\n        \"tags\": {\n            \"sensorId\": value.hwID,\n            \"type\": \"temperature\"\n        },\n        \"timestamp\": time\n    });\n}\n\n// Relay statuses\narr.push({\n    \"measurement\": \"relays\",\n    \"fields\": {\n        \"ison\": msg.payload.relays[0].ison\n    },\n    \"tags\": {\n        \"relayId\": \"heatRoomUni_0\",\n        \"type\": \"onoff\"\n    },\n    \"timestamp\": time\n});\narr.push({\n    \"measurement\": \"relays\",\n    \"fields\": {\n        \"ison\": msg.payload.relays[1].ison\n    },\n    \"tags\": {\n        \"relayId\": \"heatRoomUni_1\",\n        \"type\": \"onoff\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1310,5 +1600,48 @@
         "x": 1070,
         "y": 200,
         "wires": []
+    },
+    {
+        "id": "29af7b5bf540017d",
+        "type": "http request",
+        "z": "c70c3bb6711d4880",
+        "name": "GET Shelly PM (FTX)",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.0.246/status",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 460,
+        "y": 260,
+        "wires": [
+            [
+                "3b8861789c2e407b"
+            ]
+        ]
+    },
+    {
+        "id": "3b8861789c2e407b",
+        "type": "function",
+        "z": "c70c3bb6711d4880",
+        "name": "Transform sensor data -> InfluxDb",
+        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\n// FTP power (w)\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {\n        \"power\": msg.payload.meters[0].power\n    },\n    \"tags\": {\n        \"sensorId\": \"ftx\",\n        \"type\": \"power\"\n    },\n    \"timestamp\": time\n});\n\n// Relay status\narr.push({\n    \"measurement\": \"relays\",\n    \"fields\": {\n        \"ison\": msg.payload.relays[0].ison\n    },\n    \"tags\": {\n        \"relayId\": \"ftx\",\n        \"type\": \"onoff\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 260,
+        "wires": [
+            [
+                "fd4081947c4cd7c8"
+            ]
+        ]
     }
 ]

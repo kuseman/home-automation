@@ -1,9 +1,15 @@
 {
     "heatConfig": {
-        "strategy": "lowestPrice",
-        "lowestPrice.hoursOn": 1,
-        "bestSave.maxPerSequence": 3,
-        "bestSave.minRecover": 0,
-        "lowestPrice.consecutiveOnPeriod": true
+        "lowestPrice": {
+            "doNotSplit": true,
+            "hoursOn": 17
+        },
+        "strategy": "bestSave",
+        "bestSave": {
+            "maxPerSequence": 2,
+            "minRecover": 10,
+            "minHoursOnAfterMaxSequenceSaved": 7,
+            "maxHoursToSaveInSequence": 2
+        }
     }
 }
