@@ -1,0 +1,8 @@
+Multiple sensors fix:
+
+owfs.js
+                var sendResult = function(result, index) {
+                - msg.payload = parseResult(result);
+                + msg = { payload:  parseResult(result)};
+
+https://github.com/njh/node-red-contrib-owfs/pull/23/files

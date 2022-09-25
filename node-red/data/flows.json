@@ -200,9 +200,9 @@
         "type": "ui_group",
         "name": "Graph",
         "tab": "a9f70622d9abf0a6",
-        "order": 1,
+        "order": 2,
         "disp": false,
-        "width": 9,
+        "width": 11,
         "collapse": false,
         "className": ""
     },
@@ -255,19 +255,38 @@
         "type": "ui_group",
         "name": "Config",
         "tab": "a9f70622d9abf0a6",
-        "order": 2,
+        "order": 3,
         "disp": false,
         "width": 9,
         "collapse": false,
         "className": ""
     },
     {
-        "id": "4cd68d946bbd8690",
+        "id": "cf71bb7a6c80fb52",
+        "type": "ui_group",
+        "name": "Temperature",
+        "tab": "a9f70622d9abf0a6",
+        "order": 1,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7573a64fe66a4823",
+        "type": "tibber-api-endpoint",
+        "feedUrl": "wss://api.tibber.com/v1-beta/gql/subscriptions",
+        "queryUrl": "https://api.tibber.com/v1-beta/gql",
+        "feedTimeout": "60",
+        "name": "Tibber"
+    },
+    {
+        "id": "1509f3208579002e",
         "type": "ui_spacer",
         "z": "e9b7f147e511e03f",
         "name": "spacer",
         "group": "122451b9907ba8ea",
-        "order": 8,
+        "order": 9,
         "width": 5,
         "height": 1
     },
@@ -333,7 +352,7 @@
         "name": "Best Save",
         "maxHoursToSaveInSequence": 3,
         "minHoursOnAfterMaxSequenceSaved": 2,
-        "minSaving": 0.01,
+        "minSaving": "0.5",
         "sendCurrentValueWhenRescheduling": true,
         "outputIfNoSchedule": "true",
         "contextStorage": "memory",
@@ -351,7 +370,7 @@
         "z": "c3f1d6073dd1b579",
         "influxdb": "5c9186f58f3118da",
         "name": "Influx: Get nordpool prices",
-        "query": "from(bucket: \"node-red\")\n  |> range(start: -2h, stop: 2d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"nordpool-prices\")",
+        "query": "from(bucket: \"node-red\")\n  |> range(start: -1h, stop: 2d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"nordpool-prices\")",
         "rawOutput": false,
         "precision": "",
         "retentionPolicy": "",
@@ -408,6 +427,7 @@
         "id": "f32fe87b72d31e1d",
         "type": "debug",
         "z": "c3f1d6073dd1b579",
+        "d": true,
         "name": "Debug: Influx Nordpool query",
         "active": true,
         "tosidebar": true,
@@ -451,8 +471,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1510,
-        "y": 460,
+        "x": 1130,
+        "y": 440,
         "wires": []
     },
     {
@@ -493,8 +513,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 1850,
-        "y": 420,
+        "x": 1470,
+        "y": 400,
         "wires": [
             []
         ]
@@ -504,14 +524,14 @@
         "type": "function",
         "z": "e9b7f147e511e03f",
         "name": "Transform scheule to graph",
-        "func": "/*\nmsg.payload=[{\n    \"series\": [\"temp1\", \"temp2\", \"temp3\" ],\n    \"data\": [ [5,6,9], [3,8,5], [6,7,2] ],\n    \"labels\": [ \"Jan\", \"Feb\", \"Mar\" ]\n}];\n*/\n\nreturn {\n    \"payload\": [{\n        \"series\": [\"Price\", \"Block Heat\"],\n        \"data\": [\n            msg.payload.hours.map(p => {\n                let start = new Date(p.start).getTime();\n                return {\"x\": start, \"y\": p.price };\n            }),\n            msg.payload.hours.map(p => {\n                let start = new Date(p.start).getTime();\n                return {\"x\": start, \"y\": p.onOff ? 0 : 1};\n            })\n        ],        \n        \"labels\": [\"Price\", \"Block Heat\"]\n    }]\n};",
+        "func": "/*\nmsg.payload=[{\n    \"series\": [\"temp1\", \"temp2\", \"temp3\" ],\n    \"data\": [ [5,6,9], [3,8,5], [6,7,2] ],\n    \"labels\": [ \"Jan\", \"Feb\", \"Mar\" ]\n}];\n*/\n\n\n\nlet total = 0;\nfor (var i = 0; i < msg.payload.hours.length; i++) {\n    total += msg.payload.hours[i].price;\n}\nconst mean = Math.round((total / msg.payload.hours.length) * 100) / 100;\n\nconst forecast = flow.get(\"temperatureForecast\", \"memory\") || {};\n\nreturn {\n    \"payload\": [{\n        \"series\": [\"Price\", \"Price Mean\", \"Temperature\", \"Heat pump blocked\"],\n        \"data\": [\n            msg.payload.hours.map(p => {\n                let start = new Date(p.start).getTime();\n                return {\"x\": start, \"y\": p.price };\n            }),\n            msg.payload.hours.map(p => {\n                let start = new Date(p.start).getTime();\n                return { \"x\": start, \"y\": mean};\n            }),\n            msg.payload.hours.map(p => {\n                // Find forecast temperature if present\n                let start = new Date(p.start).getTime();\n                let temp = forecast[start];\n                return { \"x\": start, \"y\": temp };\n            }),\n            msg.payload.hours.map(p => {\n                let start = new Date(p.start).getTime();\n                return { \"x\": start, \"y\": p.onOff ? 0 : 1 };\n            })\n        ],        \n        \"labels\": [\"Price\", \"Price Mean\", \"Temperature\", \"Heat pump blocked\"]\n    }]\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1520,
-        "y": 420,
+        "x": 1140,
+        "y": 400,
         "wires": [
             [
                 "638fb96d8fc1107e",
@@ -532,8 +552,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1850,
-        "y": 460,
+        "x": 1470,
+        "y": 440,
         "wires": []
     },
     {
@@ -612,8 +632,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1540,
-        "y": 500,
+        "x": 1160,
+        "y": 480,
         "wires": [
             [
                 "7b6c3d1503349fbc"
@@ -643,8 +663,8 @@
                 "valueValue": ""
             }
         ],
-        "x": 1920,
-        "y": 500,
+        "x": 1540,
+        "y": 480,
         "wires": [
             [
                 "3a3de52759b9ce0a"
@@ -664,15 +684,15 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 2220,
-        "y": 500,
+        "x": 1840,
+        "y": 480,
         "wires": []
     },
     {
         "id": "d111e31c3283e559",
         "type": "debug",
         "z": "e9b7f147e511e03f",
-        "name": "Debug: Turn on night lowering",
+        "name": "Debug: Heat blocking",
         "active": false,
         "tosidebar": true,
         "console": false,
@@ -681,8 +701,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1530,
-        "y": 340,
+        "x": 1120,
+        "y": 280,
         "wires": []
     },
     {
@@ -720,7 +740,8 @@
         "y": 120,
         "wires": [
             [
-                "08baab9101c343d5"
+                "08baab9101c343d5",
+                "dc87ed291f731b71"
             ]
         ]
     },
@@ -827,26 +848,6 @@
             [
                 "edb2299daf504d27"
             ]
-        ]
-    },
-    {
-        "id": "aa9256f8d7cb0e77",
-        "type": "ps-strategy-best-save",
-        "z": "e9b7f147e511e03f",
-        "d": true,
-        "name": "Best Save",
-        "maxHoursToSaveInSequence": 3,
-        "minHoursOnAfterMaxSequenceSaved": "2",
-        "minSaving": "0.3",
-        "sendCurrentValueWhenRescheduling": true,
-        "outputIfNoSchedule": "true",
-        "contextStorage": "memory",
-        "x": 1150,
-        "y": 640,
-        "wires": [
-            [],
-            [],
-            []
         ]
     },
     {
@@ -983,7 +984,7 @@
         "z": "e9b7f147e511e03f",
         "name": "",
         "group": "122451b9907ba8ea",
-        "order": 6,
+        "order": 7,
         "width": 2,
         "height": 1,
         "passthru": false,
@@ -998,7 +999,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 530,
-        "y": 980,
+        "y": 1020,
         "wires": [
             [
                 "f663ae8c5503294e"
@@ -1058,7 +1059,7 @@
         "z": "e9b7f147e511e03f",
         "name": "",
         "group": "122451b9907ba8ea",
-        "order": 7,
+        "order": 8,
         "width": 2,
         "height": 1,
         "passthru": false,
@@ -1073,7 +1074,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 530,
-        "y": 1020,
+        "y": 1060,
         "wires": [
             [
                 "b9ab93f6c634c234"
@@ -1092,7 +1093,7 @@
         "finalize": "",
         "libs": [],
         "x": 960,
-        "y": 980,
+        "y": 1020,
         "wires": [
             []
         ]
@@ -1113,12 +1114,12 @@
         ],
         "repeat": "",
         "crontab": "",
-        "once": true,
+        "once": false,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "#:(file)::heatConfig.strategy",
         "payloadType": "flow",
-        "x": 310,
+        "x": 300,
         "y": 780,
         "wires": [
             [
@@ -1156,7 +1157,7 @@
         "finalize": "",
         "libs": [],
         "x": 960,
-        "y": 1020,
+        "y": 1060,
         "wires": [
             []
         ]
@@ -1281,9 +1282,9 @@
         "id": "12e28e4092178c2d",
         "type": "subflow:c3f1d6073dd1b579",
         "z": "e9b7f147e511e03f",
-        "name": "",
-        "x": 1190,
-        "y": 860,
+        "name": "Preview: Price Strategy",
+        "x": 950,
+        "y": 640,
         "wires": [
             [],
             [],
@@ -1302,10 +1303,12 @@
         "y": 380,
         "wires": [
             [
-                "d111e31c3283e559"
+                "d111e31c3283e559",
+                "9de607ca313a4e23"
             ],
             [
-                "d111e31c3283e559"
+                "d111e31c3283e559",
+                "9de607ca313a4e23"
             ],
             [
                 "059a75d75edd7eee",
@@ -1330,6 +1333,340 @@
         "wires": [
             [
                 "78d6816345b59d77"
+            ]
+        ]
+    },
+    {
+        "id": "85aeab2d71bcd892",
+        "type": "ui_gauge",
+        "z": "e9b7f147e511e03f",
+        "name": "Outside temperature",
+        "group": "cf71bb7a6c80fb52",
+        "order": 1,
+        "width": 2,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Outside (C)",
+        "label": "Celcius",
+        "format": "{{value | number:1}}",
+        "min": "-25",
+        "max": "30",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1820,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "d6af9a6ccd78029c",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "3",
+        "topic": "",
+        "payload": "sensorsAverage[\"temperature_285a2726030000cb\"]",
+        "payloadType": "global",
+        "x": 1460,
+        "y": 800,
+        "wires": [
+            [
+                "85aeab2d71bcd892"
+            ]
+        ]
+    },
+    {
+        "id": "9c503382fec6b297",
+        "type": "ui_gauge",
+        "z": "e9b7f147e511e03f",
+        "name": "Inside temperature",
+        "group": "cf71bb7a6c80fb52",
+        "order": 2,
+        "width": 2,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Inside (C)",
+        "label": "Celcius",
+        "format": "{{value | number:1}}",
+        "min": "10",
+        "max": "35",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1810,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "8477abe8d96ad9bd",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "3",
+        "topic": "",
+        "payload": "sensorsAverage[\"temperature_285ddc9c03000012\"]",
+        "payloadType": "global",
+        "x": 1460,
+        "y": 840,
+        "wires": [
+            [
+                "9c503382fec6b297"
+            ]
+        ]
+    },
+    {
+        "id": "61f784685402655d",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "#:(file)::heatConfig.bestSave.minSaving",
+        "payloadType": "flow",
+        "x": 270,
+        "y": 980,
+        "wires": [
+            [
+                "61c0204d789949f2"
+            ]
+        ]
+    },
+    {
+        "id": "654bf5f3c0890847",
+        "type": "ui_ui_control",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "events": "all",
+        "x": 920,
+        "y": 1200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a13a9bac44302983",
+        "type": "ui_gauge",
+        "z": "e9b7f147e511e03f",
+        "name": "Current power",
+        "group": "cf71bb7a6c80fb52",
+        "order": 3,
+        "width": 2,
+        "height": 2,
+        "gtype": "gage",
+        "title": "Power (W)",
+        "label": "Watt",
+        "format": "{{value | number:1}}",
+        "min": "100",
+        "max": "10000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 1800,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "65992c87bf938bb9",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "600",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "3",
+        "topic": "",
+        "payload": "sensorsAverage[\"power_home\"]",
+        "payloadType": "global",
+        "x": 1400,
+        "y": 880,
+        "wires": [
+            [
+                "a13a9bac44302983"
+            ]
+        ]
+    },
+    {
+        "id": "dc87ed291f731b71",
+        "type": "http request",
+        "z": "e9b7f147e511e03f",
+        "name": "SMHI Forecast",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/12.700831/lat/57.489277/data.json",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "cf95a2d27560732a"
+            ]
+        ]
+    },
+    {
+        "id": "cf95a2d27560732a",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Store SMHI in flow context",
+        "func": "let forecast = {};\n\nmsg.payload.timeSeries.forEach(f => {\n    let time = new Date(f.validTime).getTime();\n    forecast[time] = f.parameters.find(p => p.name === \"t\").values[0];\n});\n\nflow.set(\"temperatureForecast\", forecast, \"memory\");\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a2f3c0daaf92d76e",
+        "type": "shelly-gen1",
+        "z": "e9b7f147e511e03f",
+        "hostname": "192.168.0.142",
+        "description": "Shelly Uni (Heat pump)",
+        "mode": "none",
+        "server": "",
+        "outputmode": "event",
+        "uploadretryinterval": 5000,
+        "pollinginterval": 5000,
+        "pollstatus": false,
+        "getstatusoncommand": false,
+        "devicetype": "Relay",
+        "outputs": 1,
+        "rgbwmode": "color",
+        "x": 1490,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9de607ca313a4e23",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Turn on/off heat pump blocking",
+        "func": "// The price strategy sends true when turn on and false\n// when turn off which means we need to invert this\n// when block/un-block heat pump\n\n// Relay number two (index 1) is heat pump blocking\nreturn {\n    \"payload\": {\n        relay: 1,\n        on: !msg.payload\n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1150,
+        "y": 320,
+        "wires": [
+            [
+                "a2f3c0daaf92d76e",
+                "5e40b19e34f10613"
+            ]
+        ]
+    },
+    {
+        "id": "5e40b19e34f10613",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1440,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "61c0204d789949f2",
+        "type": "ui_text_input",
+        "z": "e9b7f147e511e03f",
+        "name": "Best Save - Min saving",
+        "label": "Best Save - Min saving",
+        "tooltip": "",
+        "group": "122451b9907ba8ea",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "number",
+        "delay": 300,
+        "topic": "bestSave.minSaving",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "str",
+        "x": 580,
+        "y": 980,
+        "wires": [
+            [
+                "b864935db4b2ab2d"
             ]
         ]
     },
@@ -1519,7 +1856,9 @@
         "wires": [
             [
                 "f45401be39697f3e",
-                "29af7b5bf540017d"
+                "29af7b5bf540017d",
+                "f053a154da49e7c2",
+                "3f7664234b3f14dc"
             ]
         ]
     },
@@ -1527,7 +1866,7 @@
         "id": "f45401be39697f3e",
         "type": "http request",
         "z": "c70c3bb6711d4880",
-        "name": "GET Shelly Uni (Heat room)",
+        "name": "GET Shelly Uni (Heat pump)",
         "method": "GET",
         "ret": "obj",
         "paytoqs": "ignore",
@@ -1558,7 +1897,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
+        "x": 840,
         "y": 200,
         "wires": [
             [
@@ -1580,7 +1919,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1080,
+        "x": 1200,
         "y": 160,
         "wires": []
     },
@@ -1597,7 +1936,7 @@
         "retentionPolicyV18Flux": "",
         "org": "Home Automation",
         "bucket": "node-red",
-        "x": 1070,
+        "x": 1190,
         "y": 200,
         "wires": []
     },
@@ -1618,7 +1957,7 @@
         "senderr": false,
         "headers": [],
         "x": 460,
-        "y": 260,
+        "y": 240,
         "wires": [
             [
                 "3b8861789c2e407b"
@@ -1636,12 +1975,237 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 780,
-        "y": 260,
+        "x": 840,
+        "y": 240,
         "wires": [
             [
                 "fd4081947c4cd7c8"
             ]
         ]
+    },
+    {
+        "id": "f399145cf39e8f7d",
+        "type": "inject",
+        "z": "c70c3bb6711d4880",
+        "name": "Read sensors average 30min",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 190,
+        "y": 120,
+        "wires": [
+            [
+                "a6b53cd9fa0e7ae3"
+            ]
+        ]
+    },
+    {
+        "id": "a6b53cd9fa0e7ae3",
+        "type": "influxdb in",
+        "z": "c70c3bb6711d4880",
+        "influxdb": "5c9186f58f3118da",
+        "name": "Sensors avg last 30min",
+        "query": "from(bucket: \"node-red\")\n  |> range(start: -30m, stop: now())\n  |> filter(fn: (r) => r[\"_measurement\"] == \"sensors\")\n  |> group(columns: [\"sensorId\", \"type\"])\n  |> timedMovingAverage(every: 1h, period: 30m)",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "Home Automation",
+        "x": 470,
+        "y": 120,
+        "wires": [
+            [
+                "78091656b64647d7",
+                "96af85b030882d78"
+            ]
+        ]
+    },
+    {
+        "id": "78091656b64647d7",
+        "type": "function",
+        "z": "c70c3bb6711d4880",
+        "name": "Set sensors average to context",
+        "func": "let average = {};\n\nmsg.payload.forEach(p => {\n    average[p.type + \"_\" + p.sensorId] = p._value\n});\n\nglobal.set(\"sensorsAverage\", average);\n/*\nnode.warn(\"Sensors average\");\nnode.warn(average);\n*/\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f053a154da49e7c2",
+        "type": "http request",
+        "z": "c70c3bb6711d4880",
+        "name": "GET Shelly Plug (Cellar ventilation)",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.0.211/status",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 500,
+        "y": 280,
+        "wires": [
+            [
+                "2203c965cdbf792f"
+            ]
+        ]
+    },
+    {
+        "id": "2203c965cdbf792f",
+        "type": "function",
+        "z": "c70c3bb6711d4880",
+        "name": "Transform sensor data -> InfluxDb",
+        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\n// Ventilation power (w)\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {\n        \"power\": msg.payload.meters[0].power\n    },\n    \"tags\": {\n        \"sensorId\": \"cellar_ventilation\",\n        \"type\": \"power\"\n    },\n    \"timestamp\": time\n});\n\n// Relay status\narr.push({\n    \"measurement\": \"relays\",\n    \"fields\": {\n        \"ison\": msg.payload.relays[0].ison\n    },\n    \"tags\": {\n        \"relayId\": \"cellar_ventilation\",\n        \"type\": \"onoff\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 280,
+        "wires": [
+            [
+                "fd4081947c4cd7c8"
+            ]
+        ]
+    },
+    {
+        "id": "3f7664234b3f14dc",
+        "type": "owfs",
+        "z": "c70c3bb6711d4880",
+        "name": "",
+        "uncached": false,
+        "mode": "read",
+        "host": "owserver",
+        "port": 4304,
+        "paths": [
+            "28.14C69C030000/temperature",
+            "28.B31326030000/temperature"
+        ],
+        "x": 420,
+        "y": 320,
+        "wires": [
+            [
+                "eef99cd8127ca3d1"
+            ]
+        ]
+    },
+    {
+        "id": "eef99cd8127ca3d1",
+        "type": "function",
+        "z": "c70c3bb6711d4880",
+        "name": "Transform sensor data -> InfluxDb",
+        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\nlet sensorId = msg.topic\n    .replace(\"/temperature\", \"\")\n    .replace(\".\", \"\");\n\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {\n        \"temperature\": msg.payload\n    },\n    \"tags\": {\n        \"sensorId\": sensorId,\n        \"type\": \"temperature\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 320,
+        "wires": [
+            [
+                "fd4081947c4cd7c8"
+            ]
+        ]
+    },
+    {
+        "id": "58f6ce23b937fa75",
+        "type": "tibber-feed",
+        "z": "c70c3bb6711d4880",
+        "name": "",
+        "active": true,
+        "apiEndpointRef": "7573a64fe66a4823",
+        "homeId": "2e0e4eb1-80e3-41d4-a308-c902ea0c7541",
+        "timestamp": "1",
+        "power": "1",
+        "lastMeterConsumption": "1",
+        "accumulatedConsumption": false,
+        "accumulatedProduction": false,
+        "accumulatedConsumptionLastHour": false,
+        "accumulatedProductionLastHour": false,
+        "accumulatedCost": "1",
+        "accumulatedReward": "1",
+        "currency": false,
+        "minPower": false,
+        "averagePower": false,
+        "maxPower": false,
+        "powerProduction": false,
+        "minPowerProduction": false,
+        "maxPowerProduction": false,
+        "lastMeterProduction": false,
+        "powerFactor": "1",
+        "voltagePhase1": "1",
+        "voltagePhase2": "1",
+        "voltagePhase3": "1",
+        "currentL1": "1",
+        "currentL2": "1",
+        "currentL3": "1",
+        "signalStrength": false,
+        "x": 420,
+        "y": 360,
+        "wires": [
+            [
+                "e742f20972bb8c79"
+            ]
+        ]
+    },
+    {
+        "id": "e742f20972bb8c79",
+        "type": "function",
+        "z": "c70c3bb6711d4880",
+        "name": "Transform sensor data -> InfluxDb",
+        "func": "let measurement = \"sensors\";\nlet time = new Date(msg.payload.timestamp).getTime();\n\nlet arr = [];\n\n// Power\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {\n        \"power\": msg.payload.power\n    },\n    \"tags\": {\n        \"sensorId\": \"home\",\n        \"type\": \"power\"\n    },\n    \"timestamp\": time\n});\n\n// Phases\nfor (let i=1;i<=3;i++) {\n    // Voltage\n    arr.push({\n        \"measurement\": measurement,\n        \"fields\": {\n            \"voltage\": msg.payload[`voltagePhase${i}`]\n        },\n        \"tags\": {\n            \"sensorId\": `home_phase${i}`,\n            \"type\": \"voltage\"\n        },\n        \"timestamp\": time\n    });\n\n    // Current\n    arr.push({\n        \"measurement\": measurement,\n        \"fields\": {\n            \"current\": msg.payload[`currentL${i}`]\n        },\n        \"tags\": {\n            \"sensorId\": `home_currentL${i}`,\n            \"type\": \"current\"\n        },\n        \"timestamp\": time\n    });\n}\n\n// Power meter\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {\n        \"voltage\": msg.payload.lastMeterConsumption\n    },\n    \"tags\": {\n        \"sensorId\": \"home_consumptionCounter\",\n        \"type\": \"counter\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 360,
+        "wires": [
+            [
+                "fd4081947c4cd7c8"
+            ]
+        ]
+    },
+    {
+        "id": "96af85b030882d78",
+        "type": "debug",
+        "z": "c70c3bb6711d4880",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 80,
+        "wires": []
     }
 ]
