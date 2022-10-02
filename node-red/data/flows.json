@@ -52,6 +52,10 @@
                     {
                         "id": "c9d3d08f8d5535f8",
                         "port": 0
+                    },
+                    {
+                        "id": "a083a1da746eb60b",
+                        "port": 0
                     }
                 ]
             },
@@ -80,6 +84,10 @@
                     {
                         "id": "c9d3d08f8d5535f8",
                         "port": 2
+                    },
+                    {
+                        "id": "474e7bc290a7874e",
+                        "port": 0
                     }
                 ]
             }
@@ -281,12 +289,22 @@
         "name": "Tibber"
     },
     {
-        "id": "1509f3208579002e",
+        "id": "cfeec5235b6e37a0",
         "type": "ui_spacer",
         "z": "e9b7f147e511e03f",
         "name": "spacer",
         "group": "122451b9907ba8ea",
-        "order": 9,
+        "order": 7,
+        "width": 9,
+        "height": 1
+    },
+    {
+        "id": "0b230ad6676d6e36",
+        "type": "ui_spacer",
+        "z": "e9b7f147e511e03f",
+        "name": "spacer",
+        "group": "122451b9907ba8ea",
+        "order": 12,
         "width": 5,
         "height": 1
     },
@@ -307,12 +325,17 @@
                 "t": "eq",
                 "v": "bestSave",
                 "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "none",
+                "vt": "str"
             }
         ],
         "checkall": "true",
         "repair": false,
-        "outputs": 2,
-        "x": 930,
+        "outputs": 3,
+        "x": 910,
         "y": 140,
         "wires": [
             [
@@ -320,6 +343,10 @@
             ],
             [
                 "c9d3d08f8d5535f8"
+            ],
+            [
+                "a083a1da746eb60b",
+                "474e7bc290a7874e"
             ]
         ]
     },
@@ -357,7 +384,7 @@
         "outputIfNoSchedule": "true",
         "contextStorage": "memory",
         "x": 1090,
-        "y": 180,
+        "y": 160,
         "wires": [
             [],
             [],
@@ -414,8 +441,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 730,
-        "y": 240,
+        "x": 570,
+        "y": 360,
         "wires": [
             [
                 "b1941c4705040f69",
@@ -454,9 +481,43 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1130,
-        "y": 240,
+        "x": 930,
+        "y": 600,
         "wires": []
+    },
+    {
+        "id": "a083a1da746eb60b",
+        "type": "function",
+        "z": "c3f1d6073dd1b579",
+        "name": "None: On/off",
+        "func": "return {\n    \"payload\": true\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "474e7bc290a7874e",
+        "type": "function",
+        "z": "c3f1d6073dd1b579",
+        "name": "None: Schedule",
+        "func": "/*\n  In\n\n  {\n      \"payload\": {\n          \"priceData\": [\n              {\n                \"value\": 1.0,\n                \"start\": 16000000\n              }\n          ]\n      }\n  }\n\n  Out\n\n  {\n      \"payload\": {\n        \"hours\": [\n          {\n            \"start\": 16000000,\n            \"price\": 1.0,\n            \"onOff\": true/false\n          }\n        ]\n      }\n\n  }\n\n*/\n\nreturn {\n  \"payload\": {\n    \"hours\": msg.payload.priceData.map(p => {\n      return {\n        \"start\": p.start,\n        \"price\": p.value,\n        \"onOff\": true\n      }\n    })\n  }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 260,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "110ef92232e90602",
@@ -862,9 +923,14 @@
         "order": 1,
         "width": 0,
         "height": 0,
-        "passthru": true,
+        "passthru": false,
         "multiple": false,
         "options": [
+            {
+                "label": "None",
+                "value": "none",
+                "type": "str"
+            },
             {
                 "label": "Best Save",
                 "value": "bestSave",
@@ -899,7 +965,7 @@
         "order": 2,
         "width": 0,
         "height": 0,
-        "passthru": true,
+        "passthru": false,
         "decouple": "false",
         "topic": "lowestPrice.doNotSplit",
         "topicType": "str",
@@ -934,7 +1000,7 @@
         "width": 0,
         "height": 0,
         "wrap": true,
-        "passthru": true,
+        "passthru": false,
         "topic": "bestSave.maxHoursToSaveInSequence",
         "topicType": "str",
         "format": "{{value}}",
@@ -962,7 +1028,7 @@
         "width": 0,
         "height": 0,
         "wrap": true,
-        "passthru": true,
+        "passthru": false,
         "topic": "bestSave.minHoursOnAfterMaxSequenceSaved",
         "topicType": "str",
         "format": "{{value}}",
@@ -984,7 +1050,7 @@
         "z": "e9b7f147e511e03f",
         "name": "",
         "group": "122451b9907ba8ea",
-        "order": 7,
+        "order": 10,
         "width": 2,
         "height": 1,
         "passthru": false,
@@ -999,7 +1065,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 530,
-        "y": 1020,
+        "y": 1100,
         "wires": [
             [
                 "f663ae8c5503294e"
@@ -1039,7 +1105,7 @@
         "type": "function",
         "z": "e9b7f147e511e03f",
         "name": "Set UI to context",
-        "func": "let config = flow.get(\"heatConfig\", \"memory\");\nif (config === null || config === undefined) {\n    config = {};\n    flow.set(\"heatConfig\", config, \"memory\");\n}\n\n// Split path into component parts\nconst parts = msg.topic.split('.');\n\n// Create sub-objects along path as needed\nlet target = config;\nwhile (parts.length > 1) {\n    const part = parts.shift();\n    target = target[part] = target[part] || {};\n}\n\n// Set value at end of path\ntarget[parts[0]] = msg.payload;\n\n//config[msg.topic] = msg.payload;\n\n//node.warn(config);\n\nreturn {\n    \"heatConfig\": config\n};",
+        "func": "let config = flow.get(\"heatConfig\", \"memory\");\nif (config === null || config === undefined) {\n    config = {};\n    flow.set(\"heatConfig\", config, \"memory\");\n}\n\nif (msg.topic === undefined) {\n    return {\n        \"heatConfig\": config\n    };\n}\n\n// Split path into component parts\nconst parts = msg.topic.split('.');\n\n// Create sub-objects along path as needed\nlet target = config;\nwhile (parts.length > 1) {\n    const part = parts.shift();\n    target = target[part] = target[part] || {};\n}\n\n// Set value at end of path\ntarget[parts[0]] = msg.payload;\n\n//config[msg.topic] = msg.payload;\n\n//node.warn(config);\n\nreturn {\n    \"heatConfig\": config\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1059,7 +1125,7 @@
         "z": "e9b7f147e511e03f",
         "name": "",
         "group": "122451b9907ba8ea",
-        "order": 8,
+        "order": 11,
         "width": 2,
         "height": 1,
         "passthru": false,
@@ -1074,7 +1140,7 @@
         "topic": "topic",
         "topicType": "msg",
         "x": 530,
-        "y": 1060,
+        "y": 1140,
         "wires": [
             [
                 "b9ab93f6c634c234"
@@ -1093,38 +1159,9 @@
         "finalize": "",
         "libs": [],
         "x": 960,
-        "y": 1020,
+        "y": 1100,
         "wires": [
             []
-        ]
-    },
-    {
-        "id": "c407b268e4cae7c6",
-        "type": "inject",
-        "z": "e9b7f147e511e03f",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "#:(file)::heatConfig.strategy",
-        "payloadType": "flow",
-        "x": 300,
-        "y": 780,
-        "wires": [
-            [
-                "bab6ee85b84ac357"
-            ]
         ]
     },
     {
@@ -1157,125 +1194,9 @@
         "finalize": "",
         "libs": [],
         "x": 960,
-        "y": 1060,
+        "y": 1140,
         "wires": [
             []
-        ]
-    },
-    {
-        "id": "29f40f86d707399b",
-        "type": "inject",
-        "z": "e9b7f147e511e03f",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "#:(file)::heatConfig.lowestPrice.hoursOn",
-        "payloadType": "flow",
-        "x": 270,
-        "y": 820,
-        "wires": [
-            [
-                "aa5149313515866f"
-            ]
-        ]
-    },
-    {
-        "id": "08d90a9615ca8517",
-        "type": "inject",
-        "z": "e9b7f147e511e03f",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "#:(file)::heatConfig.lowestPrice.doNotSplit",
-        "payloadType": "flow",
-        "x": 270,
-        "y": 860,
-        "wires": [
-            [
-                "28dbb60ea78f0927"
-            ]
-        ]
-    },
-    {
-        "id": "aec7a10dce6a9a16",
-        "type": "inject",
-        "z": "e9b7f147e511e03f",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "#:(file)::heatConfig.bestSave.maxPerSequence",
-        "payloadType": "flow",
-        "x": 250,
-        "y": 900,
-        "wires": [
-            [
-                "b06eb2e8e4f9925c"
-            ]
-        ]
-    },
-    {
-        "id": "3783e5b0a8d420e8",
-        "type": "inject",
-        "z": "e9b7f147e511e03f",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "#:(file)::heatConfig.bestSave.minRecover",
-        "payloadType": "flow",
-        "x": 270,
-        "y": 940,
-        "wires": [
-            [
-                "1ecb4ea7299f3f03"
-            ]
         ]
     },
     {
@@ -1449,47 +1370,6 @@
         ]
     },
     {
-        "id": "61f784685402655d",
-        "type": "inject",
-        "z": "e9b7f147e511e03f",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "#:(file)::heatConfig.bestSave.minSaving",
-        "payloadType": "flow",
-        "x": 270,
-        "y": 980,
-        "wires": [
-            [
-                "61c0204d789949f2"
-            ]
-        ]
-    },
-    {
-        "id": "654bf5f3c0890847",
-        "type": "ui_ui_control",
-        "z": "e9b7f147e511e03f",
-        "name": "",
-        "events": "all",
-        "x": 920,
-        "y": 1200,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "a13a9bac44302983",
         "type": "ui_gauge",
         "z": "e9b7f147e511e03f",
@@ -1655,7 +1535,7 @@
         "order": 6,
         "width": 0,
         "height": 0,
-        "passthru": true,
+        "passthru": false,
         "mode": "number",
         "delay": 300,
         "topic": "bestSave.minSaving",
@@ -1667,6 +1547,296 @@
         "wires": [
             [
                 "b864935db4b2ab2d"
+            ]
+        ]
+    },
+    {
+        "id": "67e8d3de3a360dbe",
+        "type": "ui_numeric",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "label": "Ignore - Start Hours",
+        "tooltip": "",
+        "group": "122451b9907ba8ea",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "wrap": true,
+        "passthru": false,
+        "topic": "ignore.startHours",
+        "topicType": "str",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "24",
+        "step": 1,
+        "className": "",
+        "x": 570,
+        "y": 1020,
+        "wires": [
+            [
+                "b864935db4b2ab2d"
+            ]
+        ]
+    },
+    {
+        "id": "4ecb6dfb145a8085",
+        "type": "ui_numeric",
+        "z": "e9b7f147e511e03f",
+        "name": "",
+        "label": "Ignore - End Hours",
+        "tooltip": "",
+        "group": "122451b9907ba8ea",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "wrap": true,
+        "passthru": false,
+        "topic": "ignore.endHours",
+        "topicType": "str",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "24",
+        "step": 1,
+        "className": "",
+        "x": 570,
+        "y": 1060,
+        "wires": [
+            [
+                "b864935db4b2ab2d"
+            ]
+        ]
+    },
+    {
+        "id": "527abe6274f89f1e",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "Fetch SMHI Forecast",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 180,
+        "wires": [
+            [
+                "dc87ed291f731b71"
+            ]
+        ]
+    },
+    {
+        "id": "d9d459e6b80eb2eb",
+        "type": "inject",
+        "z": "e9b7f147e511e03f",
+        "name": "Set file config -> memory config",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 450,
+        "y": 1200,
+        "wires": [
+            [
+                "b9ab93f6c634c234"
+            ]
+        ]
+    },
+    {
+        "id": "cc892b546e225a59",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI",
+        "func": "let heatConfig = flow.get(\"heatConfig\", \"memory\");\nreturn {\n    \"payload\": heatConfig.strategy\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 780,
+        "wires": [
+            [
+                "bab6ee85b84ac357"
+            ]
+        ]
+    },
+    {
+        "id": "914f66156f3b8dac",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI",
+        "func": "let heatConfig = flow.get(\"heatConfig\", \"memory\");\nreturn {\n    \"payload\": heatConfig.lowestPrice.hoursOn\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 820,
+        "wires": [
+            [
+                "aa5149313515866f"
+            ]
+        ]
+    },
+    {
+        "id": "4a3ab9fbce48ea6f",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI",
+        "func": "let heatConfig = flow.get(\"heatConfig\", \"memory\");\nreturn {\n    \"payload\": heatConfig.lowestPrice.doNotSplit\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 860,
+        "wires": [
+            [
+                "28dbb60ea78f0927"
+            ]
+        ]
+    },
+    {
+        "id": "f0a843ca70439460",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI",
+        "func": "let heatConfig = flow.get(\"heatConfig\", \"memory\");\nreturn {\n    \"payload\": heatConfig.bestSave.maxHoursToSaveInSequence\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 900,
+        "wires": [
+            [
+                "b06eb2e8e4f9925c"
+            ]
+        ]
+    },
+    {
+        "id": "05b0d29d7c8a0b62",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI",
+        "func": "let heatConfig = flow.get(\"heatConfig\", \"memory\");\nreturn {\n    \"payload\": heatConfig.bestSave.minHoursOnAfterMaxSequenceSaved\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 940,
+        "wires": [
+            [
+                "1ecb4ea7299f3f03"
+            ]
+        ]
+    },
+    {
+        "id": "abb792a831e2df59",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI",
+        "func": "let heatConfig = flow.get(\"heatConfig\", \"memory\");\nreturn {\n    \"payload\": heatConfig.bestSave.minSaving\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 980,
+        "wires": [
+            [
+                "61c0204d789949f2"
+            ]
+        ]
+    },
+    {
+        "id": "4ca1c7e08190f6a6",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI",
+        "func": "let heatConfig = flow.get(\"heatConfig\", \"memory\");\nreturn {\n    \"payload\": heatConfig.ignore?.startHours\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1020,
+        "wires": [
+            [
+                "67e8d3de3a360dbe"
+            ]
+        ]
+    },
+    {
+        "id": "7eca5aead5e3237b",
+        "type": "function",
+        "z": "e9b7f147e511e03f",
+        "name": "Set UI",
+        "func": "let heatConfig = flow.get(\"heatConfig\", \"memory\");\nreturn {\n    \"payload\": heatConfig.ignore?.endHours\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1060,
+        "wires": [
+            [
+                "4ecb6dfb145a8085"
+            ]
+        ]
+    },
+    {
+        "id": "890e3ce59b7bfdc7",
+        "type": "complete",
+        "z": "e9b7f147e511e03f",
+        "name": "Reload UI",
+        "scope": [
+            "b9ab93f6c634c234"
+        ],
+        "uncaught": false,
+        "x": 120,
+        "y": 900,
+        "wires": [
+            [
+                "cc892b546e225a59",
+                "914f66156f3b8dac",
+                "4a3ab9fbce48ea6f",
+                "f0a843ca70439460",
+                "05b0d29d7c8a0b62",
+                "abb792a831e2df59",
+                "4ca1c7e08190f6a6",
+                "7eca5aead5e3237b"
             ]
         ]
     },
@@ -2206,6 +2376,95 @@
         "statusType": "auto",
         "x": 760,
         "y": 80,
+        "wires": []
+    },
+    {
+        "id": "6202da6af26b1318",
+        "type": "sse-client",
+        "z": "c70c3bb6711d4880",
+        "name": "Esphome - elcentral",
+        "url": "http://192.168.0.92/events",
+        "events": [
+            "state"
+        ],
+        "headers": {},
+        "proxy": "",
+        "restart": true,
+        "rejectUnauthorized": true,
+        "withCredentials": true,
+        "timeout": "300",
+        "x": 460,
+        "y": 540,
+        "wires": [
+            [
+                "91608a5e1082bf47"
+            ]
+        ]
+    },
+    {
+        "id": "3c27458b34bb33c5",
+        "type": "inject",
+        "z": "c70c3bb6711d4880",
+        "name": "Start Esphome elcentral SSE",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 540,
+        "wires": [
+            [
+                "6202da6af26b1318"
+            ]
+        ]
+    },
+    {
+        "id": "91608a5e1082bf47",
+        "type": "function",
+        "z": "c70c3bb6711d4880",
+        "name": "Transform sensor data -> InfluxDb",
+        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\nlet payload = JSON.parse(msg.payload);\n\nif (payload.id === \"sensor-wifi_signal_sensor\"\n    || payload.value == null) {\n    return {\n        \"payload\": arr\n    }\n}\n\n// Remove sensor- prefix\nlet sensorId = payload.id.replace(\"sensor-\", \"\");\nlet type = \"power\";\n\nif (sensorId.indexOf(\"humidity\") >= 0) {\n    type = \"humidity\";\n} else if (sensorId.indexOf(\"temperature\") >= 0) {\n    type = \"temperatur\";\n}\n\n// Power\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {\n        \"power\": payload.value\n    },\n    \"tags\": {\n        \"sensorId\": sensorId,\n        \"type\": \"power\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 540,
+        "wires": [
+            [
+                "fd4081947c4cd7c8",
+                "ad6327025d9e2fb6"
+            ]
+        ]
+    },
+    {
+        "id": "ad6327025d9e2fb6",
+        "type": "debug",
+        "z": "c70c3bb6711d4880",
+        "name": "Debug: Elcentral SSE",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 540,
         "wires": []
     }
 ]
