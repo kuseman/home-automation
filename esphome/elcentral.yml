@@ -21,6 +21,12 @@ logger:
 # Enable Home Assistant API
 api:
 
+mqtt:
+  broker: 192.168.0.5
+  port: 1883
+  username: !secret mqtt_user
+  password: !secret mqtt_password
+
 ota:
 
 web_server:
@@ -48,10 +54,11 @@ sensor:
   - platform: pulse_meter
     name: "heat_pump"
     pin:
-      # Orangle/white
+      # Orange/white
       number: D3
       mode: INPUT_PULLUP
     unit_of_measurement: "W"
+    device_class: "power"
     internal_filter: 100ms
     accuracy_decimals: 3
     timeout: 2 min
@@ -65,6 +72,7 @@ sensor:
       number: D4
       mode: INPUT_PULLUP
     unit_of_measurement: "W"
+    device_class: "power"
     internal_filter: 100ms
     accuracy_decimals: 3
     timeout: 2 min
@@ -76,6 +84,7 @@ sensor:
     # Purple/white
     pin: D6
     unit_of_measurement: "W"
+    device_class: "power"
     internal_filter: 100ms
     accuracy_decimals: 3
     timeout: 2 min
@@ -87,6 +96,7 @@ sensor:
     # Brown/white
     pin: D5
     unit_of_measurement: "W"
+    device_class: "power"
     internal_filter: 100ms
     accuracy_decimals: 3
     timeout: 2 min
@@ -98,6 +108,7 @@ sensor:
     # Blue/white
     pin: D7
     unit_of_measurement: "W"
+    device_class: "power"
     internal_filter: 100ms
     accuracy_decimals: 3
     timeout: 2 min

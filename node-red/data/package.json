@@ -4,6 +4,7 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
+        "node-red-contrib-home-assistant-websocket": "~0.46.1",
         "node-red-contrib-influxdb": "~0.6.1",
         "node-red-contrib-nordpool-api-plus": "~4.3.1",
         "node-red-contrib-owfs": "~1.2.0",

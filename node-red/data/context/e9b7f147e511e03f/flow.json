@@ -7,7 +7,7 @@
         "bestSave": {
             "maxHoursToSaveInSequence": 3,
             "minHoursOnAfterMaxSequenceSaved": 7,
-            "minSaving": 0.006
+            "minSaving": 0.00001
         },
         "strategy": "bestSave",
         "ignore": {

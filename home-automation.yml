@@ -1,0 +1,132 @@
+services:
+  influxdb:
+    image: influxdb:2.4.0
+    ports:
+      - "8086:8086"
+    network_mode: "host"
+    volumes:
+      - ${DATA_PATH}/influxdb2:/var/lib/influxdb2
+      - ${SC_DATA_PATH}/influxdb/config.yml:/etc/influxdb2/config.yml
+    restart: unless-stopped
+    user: ${CONTAINER_USER}
+  nodered:
+    image: nodered/node-red
+    ports:
+      - "1880:1880"
+    network_mode: "host"
+    volumes:
+      - ${SC_DATA_PATH}/node-red/data:/data
+    environment:
+      - TZ=Europe/Stockholm
+    restart: unless-stopped
+    user: ${CONTAINER_USER}
+    depends_on:
+      - "influxdb"
+      - "mosquitto"
+      - "homeassistant"
+  grafana:
+    image: grafana/grafana-oss
+    ports:
+      - "3000:3000"
+    network_mode: "host"
+    volumes:
+      - ${DATA_PATH}/grafana:/var/lib/grafana
+    restart: unless-stopped
+    user: ${CONTAINER_USER}
+    depends_on:
+      - "influxdb"
+  owserver:
+    image: mneundorfer/owserver:latest
+    ports:
+      - "2121:2121"
+      - "4304:4304"
+    network_mode: "host"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${SC_DATA_PATH}/owserver/data/owfs.conf:/etc/owfs.conf:ro
+    devices:
+      - /dev/bus/usb
+    restart: unless-stopped
+    user: ${CONTAINER_USER}
+  telegraf:
+    image: telegraf
+    network_mode: "host"
+    hostname: ${HOSTNAME}
+    volumes:
+      - /:/hostfs:ro
+      - ${SC_DATA_PATH}/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    environment:
+      - HOST_ETC=/hostfs/etc
+      - HOST_PROC=/hostfs/proc
+      - HOST_SYS=/hostfs/sys
+      - HOST_VAR=/hostfs/var
+      - HOST_RUN=/hostfs/run
+      - HOST_MOUNT_PREFIX=/hostfs
+    restart: unless-stopped
+    user: ${CONTAINER_USER}
+    depends_on:
+      - "influxdb"
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    ports:
+      - "8443:8443"
+    network_mode: "host"
+    volumes:
+      - ${DATA_PATH}/home-assistant:/config
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    environment:
+      - TZ=Europe/Stockholm
+    restart: unless-stopped
+    privileged: true
+    depends_on:
+      - "mosquitto"
+  hass_cloudflare_tunnel:
+    # Rquires secret env HASS_TUNNEL_TOKEN
+    image: cloudflare/cloudflared:latest
+    user: ${CONTAINER_USER}
+    network_mode: "host"
+    restart: unless-stopped
+    depends_on:
+      - "homeassistant"
+    command: tunnel --no-autoupdate run --token ${HASS_TUNNEL_TOKEN}
+  portainer:
+    image: portainer/portainer-ce:latest
+    # user: ${CONTAINER_USER}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${DATA_PATH}/portainer/data:/data
+    ports:
+      - 9000:9000
+  esphome:
+    image: esphome/esphome
+    user: ${CONTAINER_USER}
+    ports:
+      - "6052:6052/tcp"
+    restart: unless-stopped
+    network_mode: "host"
+    environment:
+      - TZ=Europe/Stockholm
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${SC_DATA_PATH}/esphome:/config
+      - ${SC_DATA_PATH}/esphome/.platformio:/.platformio
+      - ${SC_DATA_PATH}/esphome/piolibs:/piolibs
+  mosquitto:
+    image: eclipse-mosquitto
+    user: ${CONTAINER_USER}
+    restart: unless-stopped
+    ports:
+      - "1883:1883/tcp"
+    environment:
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${SC_DATA_PATH}/mosquitto/config:/mosquitto/config
+      - ${DATA_PATH}/mosquitto/data:/mosquitto/data
+      - ${DATA_PATH}/mosquitto/log:/mosquitto/log
+    stdin_open: true
+    tty: true

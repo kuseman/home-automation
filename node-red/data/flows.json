@@ -255,7 +255,7 @@
         "usetls": false,
         "tls": "",
         "influxdbVersion": "2.0",
-        "url": "http://influxdb:8086",
+        "url": "http://localhost:8086",
         "rejectUnauthorized": true
     },
     {
@@ -307,6 +307,57 @@
         "order": 12,
         "width": 5,
         "height": 1
+    },
+    {
+        "id": "b55702671046d29c",
+        "type": "mqtt-broker",
+        "name": "Mosquitto",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "nodered",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "07f5fd81a91d1bd1",
+        "type": "server",
+        "d": true,
+        "name": "Home Assistant",
+        "version": 5,
+        "addon": false,
+        "rejectUnauthorizedCerts": false,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": true,
+        "cacheJson": true,
+        "heartbeat": false,
+        "heartbeatInterval": "30",
+        "areaSelector": "friendlyName",
+        "deviceSelector": "friendlyName",
+        "entitySelector": "friendlyName",
+        "statusSeparator": ": ",
+        "statusYear": "hidden",
+        "statusMonth": "short",
+        "statusDay": "numeric",
+        "statusHourCycle": "default",
+        "statusTimeFormat": "h:m",
+        "enableGlobalContextStore": false
     },
     {
         "id": "b1941c4705040f69",
@@ -397,7 +448,7 @@
         "z": "c3f1d6073dd1b579",
         "influxdb": "5c9186f58f3118da",
         "name": "Influx: Get nordpool prices",
-        "query": "from(bucket: \"node-red\")\n  |> range(start: -1h, stop: 2d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"nordpool-prices\")",
+        "query": "from(bucket: \"node-red\")\n  |> range(start: -12h, stop: 2d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"nordpool-prices\")",
         "rawOutput": false,
         "precision": "",
         "retentionPolicy": "",
@@ -605,7 +656,7 @@
         "type": "debug",
         "z": "e9b7f147e511e03f",
         "name": "Debug: Graph data",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -791,7 +842,7 @@
             }
         ],
         "repeat": "",
-        "crontab": "10 15 * * *",
+        "crontab": "15 15 * * *",
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
@@ -865,7 +916,7 @@
         "type": "debug",
         "z": "e9b7f147e511e03f",
         "name": "Debug: Influx insert query",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -907,7 +958,8 @@
         "y": 300,
         "wires": [
             [
-                "edb2299daf504d27"
+                "edb2299daf504d27",
+                "f407fd2ba4c3a541"
             ]
         ]
     },
@@ -1441,7 +1493,7 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 360,
+        "x": 340,
         "y": 180,
         "wires": [
             [
@@ -1513,7 +1565,7 @@
         "type": "debug",
         "z": "e9b7f147e511e03f",
         "name": "debug 4",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1841,9 +1893,88 @@
         ]
     },
     {
+        "id": "a59601dcc02a563f",
+        "type": "server-events",
+        "z": "e9b7f147e511e03f",
+        "d": true,
+        "name": "",
+        "server": "07f5fd81a91d1bd1",
+        "version": 2,
+        "eventType": "",
+        "exposeToHomeAssistant": false,
+        "eventData": "",
+        "haConfig": [
+            {
+                "property": "name",
+                "value": ""
+            },
+            {
+                "property": "icon",
+                "value": ""
+            }
+        ],
+        "waitForRunning": true,
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "eventData"
+            },
+            {
+                "property": "topic",
+                "propertyType": "msg",
+                "value": "$outputData(\"eventData\").event_type",
+                "valueType": "jsonata"
+            }
+        ],
+        "event_type": "",
+        "x": 240,
+        "y": 560,
+        "wires": [
+            [
+                "828b7a6bf42e4809"
+            ]
+        ]
+    },
+    {
+        "id": "828b7a6bf42e4809",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "f407fd2ba4c3a541",
+        "type": "debug",
+        "z": "e9b7f147e511e03f",
+        "name": "INFLUX COMPLETE",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 280,
+        "wires": []
+    },
+    {
         "id": "99ef81142ef233f5",
         "type": "shelly-gen1",
         "z": "08116aa9d09b7e07",
+        "d": true,
         "hostname": "192.168.0.68",
         "description": "Office: Window Lights",
         "mode": "polling",
@@ -1932,6 +2063,7 @@
         "id": "817b4685aebe0931",
         "type": "shelly-gen1",
         "z": "08116aa9d09b7e07",
+        "d": true,
         "hostname": "192.168.0.164",
         "description": "Livingroom Down stairs: Window Lights",
         "mode": "polling",
@@ -2269,7 +2401,7 @@
         "name": "",
         "uncached": false,
         "mode": "read",
-        "host": "owserver",
+        "host": "localhost",
         "port": 4304,
         "paths": [
             "28.14C69C030000/temperature",
@@ -2435,7 +2567,7 @@
         "type": "function",
         "z": "c70c3bb6711d4880",
         "name": "Transform sensor data -> InfluxDb",
-        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\nlet payload = JSON.parse(msg.payload);\n\nif (payload.id === \"sensor-wifi_signal_sensor\"\n    || payload.value == null) {\n    return {\n        \"payload\": arr\n    }\n}\n\n// Remove sensor- prefix\nlet sensorId = payload.id.replace(\"sensor-\", \"\");\nlet type = \"power\";\n\nif (sensorId.indexOf(\"humidity\") >= 0) {\n    type = \"humidity\";\n} else if (sensorId.indexOf(\"temperature\") >= 0) {\n    type = \"temperatur\";\n}\n\n// Power\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {\n        \"power\": payload.value\n    },\n    \"tags\": {\n        \"sensorId\": sensorId,\n        \"type\": \"power\"\n    },\n    \"timestamp\": time\n});\n\nreturn {\n    \"payload\": arr\n};",
+        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\nlet payload = JSON.parse(msg.payload);\n\nif (payload.id === \"sensor-wifi_signal_sensor\"\n    || payload.value == null) {\n    return {\n        \"payload\": arr\n    }\n}\n\n// Remove sensor- prefix\nlet sensorId = payload.id.replace(\"sensor-\", \"\");\nlet type = \"power\";\nlet field = \"power\"\n\nif (sensorId.indexOf(\"humidity\") >= 0) {\n    type = \"humidity\";\n    field = \"humidity\"\n} else if (sensorId.indexOf(\"temperature\") >= 0) {\n    type = \"temperature\";\n    field = \"temperature\";\n}\n\n// Power\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {        \n    },\n    \"tags\": {\n        \"sensorId\": sensorId,\n        \"type\": type\n    },\n    \"timestamp\": time\n});\n\narr[0].fields[field] = payload.value;\n\nreturn {\n    \"payload\": arr\n};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2466,5 +2598,66 @@
         "x": 1180,
         "y": 540,
         "wires": []
+    },
+    {
+        "id": "69e17d3a79041595",
+        "type": "debug",
+        "z": "c70c3bb6711d4880",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "843b73c949f3c4b9",
+        "type": "mqtt in",
+        "z": "c70c3bb6711d4880",
+        "d": true,
+        "name": "",
+        "topic": "shellies/+/relay/+/power",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "b55702671046d29c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 720,
+        "wires": [
+            [
+                "69e17d3a79041595"
+            ]
+        ]
+    },
+    {
+        "id": "43f3c8a3fde1d7c1",
+        "type": "mqtt in",
+        "z": "c70c3bb6711d4880",
+        "d": true,
+        "name": "",
+        "topic": "elcentral/sensor/+/state",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "b55702671046d29c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 260,
+        "y": 660,
+        "wires": [
+            [
+                "69e17d3a79041595"
+            ]
+        ]
     }
 ]
