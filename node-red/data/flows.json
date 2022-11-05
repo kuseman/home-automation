@@ -338,7 +338,6 @@
     {
         "id": "07f5fd81a91d1bd1",
         "type": "server",
-        "d": true,
         "name": "Home Assistant",
         "version": 5,
         "addon": false,
@@ -656,7 +655,7 @@
         "type": "debug",
         "z": "e9b7f147e511e03f",
         "name": "Debug: Graph data",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -916,7 +915,7 @@
         "type": "debug",
         "z": "e9b7f147e511e03f",
         "name": "Debug: Influx insert query",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1565,7 +1564,7 @@
         "type": "debug",
         "z": "e9b7f147e511e03f",
         "name": "debug 4",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1949,8 +1948,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 480,
-        "y": 560,
+        "x": 740,
+        "y": 540,
         "wires": []
     },
     {
@@ -2511,118 +2510,12 @@
         "wires": []
     },
     {
-        "id": "6202da6af26b1318",
-        "type": "sse-client",
-        "z": "c70c3bb6711d4880",
-        "name": "Esphome - elcentral",
-        "url": "http://192.168.0.92/events",
-        "events": [
-            "state"
-        ],
-        "headers": {},
-        "proxy": "",
-        "restart": true,
-        "rejectUnauthorized": true,
-        "withCredentials": true,
-        "timeout": "300",
-        "x": 460,
-        "y": 540,
-        "wires": [
-            [
-                "91608a5e1082bf47"
-            ]
-        ]
-    },
-    {
-        "id": "3c27458b34bb33c5",
-        "type": "inject",
-        "z": "c70c3bb6711d4880",
-        "name": "Start Esphome elcentral SSE",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "1",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 200,
-        "y": 540,
-        "wires": [
-            [
-                "6202da6af26b1318"
-            ]
-        ]
-    },
-    {
-        "id": "91608a5e1082bf47",
-        "type": "function",
-        "z": "c70c3bb6711d4880",
-        "name": "Transform sensor data -> InfluxDb",
-        "func": "let measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet arr = [];\n\nlet payload = JSON.parse(msg.payload);\n\nif (payload.id === \"sensor-wifi_signal_sensor\"\n    || payload.value == null) {\n    return {\n        \"payload\": arr\n    }\n}\n\n// Remove sensor- prefix\nlet sensorId = payload.id.replace(\"sensor-\", \"\");\nlet type = \"power\";\nlet field = \"power\"\n\nif (sensorId.indexOf(\"humidity\") >= 0) {\n    type = \"humidity\";\n    field = \"humidity\"\n} else if (sensorId.indexOf(\"temperature\") >= 0) {\n    type = \"temperature\";\n    field = \"temperature\";\n}\n\n// Power\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {        \n    },\n    \"tags\": {\n        \"sensorId\": sensorId,\n        \"type\": type\n    },\n    \"timestamp\": time\n});\n\narr[0].fields[field] = payload.value;\n\nreturn {\n    \"payload\": arr\n};",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 840,
-        "y": 540,
-        "wires": [
-            [
-                "fd4081947c4cd7c8",
-                "ad6327025d9e2fb6"
-            ]
-        ]
-    },
-    {
-        "id": "ad6327025d9e2fb6",
-        "type": "debug",
-        "z": "c70c3bb6711d4880",
-        "name": "Debug: Elcentral SSE",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1180,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "69e17d3a79041595",
-        "type": "debug",
-        "z": "c70c3bb6711d4880",
-        "name": "debug 5",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 440,
-        "y": 720,
-        "wires": []
-    },
-    {
         "id": "843b73c949f3c4b9",
         "type": "mqtt in",
         "z": "c70c3bb6711d4880",
         "d": true,
         "name": "",
-        "topic": "shellies/+/relay/+/power",
+        "topic": "shellies/+/relay/+",
         "qos": "2",
         "datatype": "auto-detect",
         "broker": "b55702671046d29c",
@@ -2630,11 +2523,11 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 220,
-        "y": 720,
+        "x": 440,
+        "y": 600,
         "wires": [
             [
-                "69e17d3a79041595"
+                "64eb0ed46d520946"
             ]
         ]
     },
@@ -2642,7 +2535,6 @@
         "id": "43f3c8a3fde1d7c1",
         "type": "mqtt in",
         "z": "c70c3bb6711d4880",
-        "d": true,
         "name": "",
         "topic": "elcentral/sensor/+/state",
         "qos": "2",
@@ -2652,12 +2544,65 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 260,
-        "y": 660,
+        "x": 460,
+        "y": 420,
         "wires": [
             [
-                "69e17d3a79041595"
+                "ba9dd3a1ce5f8c15"
             ]
         ]
+    },
+    {
+        "id": "ba9dd3a1ce5f8c15",
+        "type": "function",
+        "z": "c70c3bb6711d4880",
+        "name": "Transform sensor data -> InfluxDb",
+        "func": "// topic: \"elcentral/sensor/cold_cellar_temperature/state\"\nconst sensorRegex = new RegExp(\".*\\/sensor\\/(.*)\\/state\", \"g\")\n\nlet measurement = \"sensors\";\nlet time = new Date().getTime();\n\nlet sensorId = sensorRegex.exec(msg.topic)[1]\nlet arr = [];\n\nlet payload = msg.payload;\n\nif (sensorId === null ||\n    sensorId === undefined ||\n    sensorId === \"wifi_signal_sensor\" ||\n    payload == null) {\n    return {\n        \"payload\": arr\n    }\n}\n\n// Remove sensor- prefix\nlet type = \"power\";\nlet field = \"power\"\n\nif (sensorId.indexOf(\"humidity\") >= 0) {\n    type = \"humidity\";\n    field = \"humidity\"\n} else if (sensorId.indexOf(\"temperature\") >= 0) {\n    type = \"temperature\";\n    field = \"temperature\";\n}\n\n// Power\narr.push({\n    \"measurement\": measurement,\n    \"fields\": {        \n    },\n    \"tags\": {\n        \"sensorId\": sensorId,\n        \"type\": type\n    },\n    \"timestamp\": time\n});\n\narr[0].fields[field] = payload;\n\nreturn {\n    \"payload\": arr\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 840,
+        "y": 420,
+        "wires": [
+            [
+                "134e2dcee77199b6",
+                "fd4081947c4cd7c8"
+            ]
+        ]
+    },
+    {
+        "id": "134e2dcee77199b6",
+        "type": "debug",
+        "z": "c70c3bb6711d4880",
+        "name": "Debug: Elcentral MQTT",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1190,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "64eb0ed46d520946",
+        "type": "debug",
+        "z": "c70c3bb6711d4880",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 600,
+        "wires": []
     }
 ]

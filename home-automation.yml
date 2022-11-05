@@ -67,7 +67,8 @@ services:
     depends_on:
       - "influxdb"
   homeassistant:
-    image: ghcr.io/home-assistant/home-assistant:stable
+#    image: ghcr.io/home-assistant/home-assistant:stable
+    image: linuxserver/homeassistant:latest
     ports:
       - "8443:8443"
     network_mode: "host"
@@ -77,8 +78,10 @@ services:
       - /dev/ttyUSB0:/dev/ttyUSB0
     environment:
       - TZ=Europe/Stockholm
+      - PUID=${CONTAINER_USER}
+      - PGID=${CONTAINER_USER}
     restart: unless-stopped
-    privileged: true
+#    privileged: true
     depends_on:
       - "mosquitto"
   hass_cloudflare_tunnel:

@@ -66,20 +66,6 @@ sensor:
       - multiply: 60
 
   - platform: pulse_meter
-    name: "ev_charger"
-    pin:
-      # Green/white
-      number: D4
-      mode: INPUT_PULLUP
-    unit_of_measurement: "W"
-    device_class: "power"
-    internal_filter: 100ms
-    accuracy_decimals: 3
-    timeout: 2 min
-    filters:
-      - multiply: 60
-
-  - platform: pulse_meter
     name: "freezer"
     # Purple/white
     pin: D6

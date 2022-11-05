@@ -6,10 +6,10 @@
         },
         "bestSave": {
             "maxHoursToSaveInSequence": 3,
-            "minHoursOnAfterMaxSequenceSaved": 7,
+            "minHoursOnAfterMaxSequenceSaved": 6,
             "minSaving": 0.00001
         },
-        "strategy": "bestSave",
+        "strategy": "none",
         "ignore": {
             "startHours": 4,
             "endHours": 6
