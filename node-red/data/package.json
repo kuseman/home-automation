@@ -12,7 +12,7 @@
         "node-red-contrib-scheduler": "~1.0.5",
         "node-red-contrib-shelly": "~9.13.0",
         "node-red-contrib-slack": "~2.0.0",
-        "node-red-contrib-tibber-api": "~2.7.1",
+        "node-red-contrib-tibber-api": "~5.0.1",
         "node-red-dashboard": "~3.1.7"
     }
 }

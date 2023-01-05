@@ -281,14 +281,6 @@
         "className": ""
     },
     {
-        "id": "7573a64fe66a4823",
-        "type": "tibber-api-endpoint",
-        "feedUrl": "wss://api.tibber.com/v1-beta/gql/subscriptions",
-        "queryUrl": "https://api.tibber.com/v1-beta/gql",
-        "feedTimeout": "60",
-        "name": "Tibber"
-    },
-    {
         "id": "cfeec5235b6e37a0",
         "type": "ui_spacer",
         "z": "e9b7f147e511e03f",
@@ -357,6 +349,13 @@
         "statusHourCycle": "default",
         "statusTimeFormat": "h:m",
         "enableGlobalContextStore": false
+    },
+    {
+        "id": "067e546d0b6ae719",
+        "type": "tibber-api-endpoint",
+        "queryUrl": "https://api.tibber.com/v1-beta/gql",
+        "feedTimeout": "60",
+        "name": "Tibber"
     },
     {
         "id": "b1941c4705040f69",
@@ -1521,6 +1520,7 @@
         "id": "a2f3c0daaf92d76e",
         "type": "shelly-gen1",
         "z": "e9b7f147e511e03f",
+        "d": true,
         "hostname": "192.168.0.142",
         "description": "Shelly Uni (Heat pump)",
         "mode": "none",
@@ -1957,7 +1957,7 @@
         "type": "debug",
         "z": "e9b7f147e511e03f",
         "name": "INFLUX COMPLETE",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2434,47 +2434,6 @@
         ]
     },
     {
-        "id": "58f6ce23b937fa75",
-        "type": "tibber-feed",
-        "z": "c70c3bb6711d4880",
-        "name": "",
-        "active": true,
-        "apiEndpointRef": "7573a64fe66a4823",
-        "homeId": "2e0e4eb1-80e3-41d4-a308-c902ea0c7541",
-        "timestamp": "1",
-        "power": "1",
-        "lastMeterConsumption": "1",
-        "accumulatedConsumption": false,
-        "accumulatedProduction": false,
-        "accumulatedConsumptionLastHour": false,
-        "accumulatedProductionLastHour": false,
-        "accumulatedCost": "1",
-        "accumulatedReward": "1",
-        "currency": false,
-        "minPower": false,
-        "averagePower": false,
-        "maxPower": false,
-        "powerProduction": false,
-        "minPowerProduction": false,
-        "maxPowerProduction": false,
-        "lastMeterProduction": false,
-        "powerFactor": "1",
-        "voltagePhase1": "1",
-        "voltagePhase2": "1",
-        "voltagePhase3": "1",
-        "currentL1": "1",
-        "currentL2": "1",
-        "currentL3": "1",
-        "signalStrength": false,
-        "x": 420,
-        "y": 360,
-        "wires": [
-            [
-                "e742f20972bb8c79"
-            ]
-        ]
-    },
-    {
         "id": "e742f20972bb8c79",
         "type": "function",
         "z": "c70c3bb6711d4880",
@@ -2604,5 +2563,46 @@
         "x": 780,
         "y": 600,
         "wires": []
+    },
+    {
+        "id": "f4dedd63d6a402f1",
+        "type": "tibber-feed",
+        "z": "c70c3bb6711d4880",
+        "name": "",
+        "active": true,
+        "apiEndpointRef": "067e546d0b6ae719",
+        "homeId": "2e0e4eb1-80e3-41d4-a308-c902ea0c7541",
+        "timestamp": "1",
+        "power": "1",
+        "lastMeterConsumption": "1",
+        "accumulatedConsumption": "1",
+        "accumulatedProduction": false,
+        "accumulatedConsumptionLastHour": "1",
+        "accumulatedProductionLastHour": false,
+        "accumulatedCost": "1",
+        "accumulatedReward": false,
+        "currency": false,
+        "minPower": "1",
+        "averagePower": "1",
+        "maxPower": "1",
+        "powerProduction": false,
+        "minPowerProduction": false,
+        "maxPowerProduction": false,
+        "lastMeterProduction": false,
+        "powerFactor": false,
+        "voltagePhase1": "1",
+        "voltagePhase2": "1",
+        "voltagePhase3": "1",
+        "currentL1": "1",
+        "currentL2": "1",
+        "currentL3": "1",
+        "signalStrength": "1",
+        "x": 420,
+        "y": 360,
+        "wires": [
+            [
+                "e742f20972bb8c79"
+            ]
+        ]
     }
 ]
