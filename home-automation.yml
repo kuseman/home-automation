@@ -76,6 +76,7 @@ services:
       - ${DATA_PATH}/home-assistant:/config
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
     environment:
       - TZ=Europe/Stockholm
       - PUID=${CONTAINER_USER}
