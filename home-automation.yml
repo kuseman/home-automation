@@ -75,8 +75,10 @@ services:
     volumes:
       - ${DATA_PATH}/home-assistant:/config
     devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
-      - /dev/ttyUSB1:/dev/ttyUSB1
+# RFX COM
+      - /dev/serial/by-id/usb-RFXCOM_RFXtrx433_03VHG0K0-if00-port0:/dev/ttyUSB0
+# FTX RS485
+      - /dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10MMMMM-if00-port0:/dev/ttyUSB1
     environment:
       - TZ=Europe/Stockholm
       - PUID=${CONTAINER_USER}
