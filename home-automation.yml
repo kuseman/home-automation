@@ -136,3 +136,19 @@ services:
       - ${DATA_PATH}/mosquitto/log:/mosquitto/log
     stdin_open: true
     tty: true
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - ${DATA_PATH}/zigbee2mqtt:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+    # Frontend port
+      - 8090:8080
+    environment:
+      - TZ=Europe/Stockholm
+    devices:
+      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2665165-if00:/dev/ttyACM0
+    depends_on:
+      - "mosquitto"
