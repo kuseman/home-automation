@@ -9,6 +9,8 @@ services:
       - ${SC_DATA_PATH}/influxdb/config.yml:/etc/influxdb2/config.yml
     restart: unless-stopped
     user: ${CONTAINER_USER}
+    profiles:
+      - donotstart
   nodered:
     image: nodered/node-red
     ports:
@@ -24,6 +26,8 @@ services:
       - "influxdb"
       - "mosquitto"
       - "homeassistant"
+    profiles:
+      - donotstart
   grafana:
     image: grafana/grafana-oss
     ports:
@@ -35,6 +39,8 @@ services:
     user: ${CONTAINER_USER}
     depends_on:
       - "influxdb"
+    profiles:
+      - donotstart
   owserver:
     image: mneundorfer/owserver:latest
     ports:
@@ -66,6 +72,8 @@ services:
     user: ${CONTAINER_USER}
     depends_on:
       - "influxdb"
+    profiles:
+      - donotstart
   homeassistant:
 #    image: ghcr.io/home-assistant/home-assistant:stable
     image: linuxserver/homeassistant:latest
@@ -149,6 +157,6 @@ services:
     environment:
       - TZ=Europe/Stockholm
     devices:
-      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2665165-if00:/dev/ttyACM0
+      - /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_7232a8d8db8bee118cc4fa018acbdcd8-if00-port0:/dev/ttyACM0
     depends_on:
       - "mosquitto"
